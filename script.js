@@ -1,24 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del formulario
+    // Elementos del DOM
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
     const brandSelect = document.getElementById('brand');
     const customBrandGroup = document.getElementById('custom-brand-group');
+    const logoUpload = document.getElementById('logo-upload');
     const generateBtn = document.getElementById('generate-btn');
     const previewSection = document.getElementById('preview-section');
     const licensePreview = document.getElementById('license-preview');
     const downloadBtn = document.getElementById('download-btn');
-    
-    // Controles de espaciado y tamaño
     const spacingInput = document.getElementById('spacing');
     const spacingValue = document.getElementById('spacing-value');
     const sizeInput = document.getElementById('size');
     const sizeValue = document.getElementById('size-value');
-    
-    // Controles de zoom
     const zoomInBtn = document.getElementById('zoom-in');
     const zoomOutBtn = document.getElementById('zoom-out');
     const resetZoomBtn = document.getElementById('reset-zoom');
     
     let currentScale = 1;
+    let logoUrl = null;
+    
+    // Modo oscuro/claro
+    themeToggle.addEventListener('click', function() {
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+        themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        
+        // Guardar preferencia en localStorage
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+    
+    // Cargar tema guardado
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        body.classList.remove('light-mode');
+        themeToggle.textContent = '☀️';
+    }
     
     // Mostrar/ocultar campo de marca personalizada
     brandSelect.addEventListener('change', function() {
@@ -26,6 +44,18 @@ document.addEventListener('DOMContentLoaded', function() {
             customBrandGroup.classList.remove('hidden');
         } else {
             customBrandGroup.classList.add('hidden');
+        }
+    });
+    
+    // Cargar logo
+    logoUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                logoUrl = event.target.result;
+            };
+            reader.readAsDataURL(file);
         }
     });
     
@@ -46,9 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const licenseNumber = document.getElementById('license-number').value.toUpperCase();
         const fontStyle = document.getElementById('font-style').value;
-        const exposition = document.getElementById('exposition').value;
         const spacing = spacingInput.value;
-        const size = sizeInput.value / 100; // Convertir porcentaje a factor
+        const size = sizeInput.value / 100;
         
         if (!licenseNumber) {
             alert('Por favor ingresa un número de patente');
@@ -56,22 +85,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Generar el HTML de la patente
-        licensePreview.innerHTML = `
-            <div class="license-brand" style="font-style: ${fontStyle.includes('italic') ? 'italic' : 'normal'}; 
-                                      font-weight: ${fontStyle.includes('bold') ? 'bold' : 'normal'};
-                                      letter-spacing: ${spacing}px;
-                                      font-size: ${24 * size}px">
-                ${brand}
-            </div>
+        let licenseHTML = '';
+        
+        if (logoUrl) {
+            licenseHTML += `<img src="${logoUrl}" class="license-logo" alt="Logo">`;
+        }
+        
+        if (brand) {
+            licenseHTML += `
+                <div class="license-brand" style="font-style: ${fontStyle.includes('italic') ? 'italic' : 'normal'}; 
+                                          font-weight: ${fontStyle.includes('bold') ? 'bold' : 'normal'};
+                                          letter-spacing: ${spacing}px;
+                                          font-size: ${24 * size}px">
+                    ${brand}
+                </div>`;
+        }
+        
+        licenseHTML += `
             <div class="license-number" style="font-style: ${fontStyle.includes('italic') ? 'italic' : 'normal'}; 
                                       font-weight: ${fontStyle.includes('bold') ? 'bold' : 'normal'};
                                       letter-spacing: ${spacing}px;
                                       font-size: ${32 * size}px">
                 ${licenseNumber}
-            </div>
-            ${exposition ? `<div class="license-details" style="font-size: ${16 * size}px">Exposición: ${exposition}</div>` : ''}
-        `;
+            </div>`;
         
+        licensePreview.innerHTML = licenseHTML;
         previewSection.classList.remove('hidden');
         currentScale = 1;
         licensePreview.style.transform = `scale(${currentScale})`;
@@ -95,15 +133,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Descargar la patente como imagen
     downloadBtn.addEventListener('click', function() {
-        // Crear un canvas de la patente para descargar como imagen
         html2canvas(licensePreview, {
-            scale: 2, // Mayor calidad
-            backgroundColor: null // Fondo transparente
+            scale: 2,
+            backgroundColor: null,
+            logging: false,
+            useCORS: true
         }).then(canvas => {
             const link = document.createElement('a');
             link.download = 'patente-' + document.getElementById('license-number').value + '.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        }).catch(err => {
+            console.error('Error al generar la imagen:', err);
+            alert('Ocurrió un error al generar la imagen. Inténtalo de nuevo.');
         });
     });
 });
