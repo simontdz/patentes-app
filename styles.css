@@ -196,3 +196,18 @@ input[type="range"]::-webkit-slider-thumb {
     margin-left: 10px;
     color: var(--text-color);
 }
+
+/* Opcional: ajustar el tamaño del contenedor de vista previa */
+.license-preview {
+    min-height: 150px; /* Reducido de 200px */
+    padding: 20px;     /* Reducido de 30px */
+}
+
+/* Ajustar tamaños iniciales */
+#preview-brand {
+    font-size: 18px;   /* Reducido de 24px */
+}
+
+#preview-number {
+    font-size: 24px;   /* Reducido de 32px */
+}
