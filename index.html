@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Patentes - MIPATENTE.CL</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <h1>GENERADOR DE PLANTILLAS <br><small>Bienvenido Simóndz</small></h1>
+    
+    <div class="container">
+        <div class="form-section">
+            <div class="form-group">
+                <label for="brand">Marca del vehículo:</label>
+                <select id="brand">
+                    <option value="CHEVROLET">Chevrolet</option>
+                    <option value="TOYOTA">Toyota</option>
+                    <option value="FORD">Ford</option>
+                    <option value="HONDA">Honda</option>
+                    <option value="NISSAN">Nissan</option>
+                    <option value="OTRA">Otra marca</option>
+                </select>
+            </div>
+            
+            <div class="form-group hidden" id="custom-brand-group">
+                <label for="custom-brand">Especificar marca:</label>
+                <input type="text" id="custom-brand" placeholder="Ingresa la marca del vehículo">
+            </div>
+            
+            <div class="form-group">
+                <label for="license-number">Número de patente:</label>
+                <input type="text" id="license-number" placeholder="Ej: ABR55 o XBRT56" maxlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="font-style">Estilo de fuente:</label>
+                <select id="font-style">
+                    <option value="normal">Normal</option>
+                    <option value="bold">Negrita</option>
+                    <option value="italic">Itálica</option>
+                    <option value="bold italic">Negrita + Itálica</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="exposition">Exposición (opcional):</label>
+                <input type="text" id="exposition" placeholder="Ej: Tonala Lago">
+            </div>
+            
+            <!-- Nuevos controles para espaciado y tamaño -->
+            <div class="form-group">
+                <label for="spacing">Espaciado entre letras (px):</label>
+                <input type="range" id="spacing" min="0" max="20" value="2">
+                <span id="spacing-value">2 px</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="size">Tamaño de fuente (%):</label>
+                <input type="range" id="size" min="50" max="200" value="100">
+                <span id="size-value">100%</span>
+            </div>
+            
+            <button id="generate-btn">Generar Patente</button>
+        </div>
+        
+        <div class="preview-section hidden" id="preview-section">
+            <h2>Vista previa de la patente</h2>
+            <div class="preview-controls">
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+                <button id="reset-zoom">Reset</button>
+            </div>
+            <div class="license-container">
+                <div class="license-preview" id="license-preview"></div>
+            </div>
+            <button class="download-btn" id="download-btn">Descargar Patente</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
