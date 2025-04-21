@@ -4,12 +4,8 @@
     --text-color: #333;
     --panel-bg: #ffffff;
     --border-color: #ddd;
-    --primary-btn: #4CAF50;
-    --primary-btn-hover: #45a049;
-    --secondary-btn: #2196F3;
-    --secondary-btn-hover: #0b7dda;
-    --zoom-btn: #666;
-    --zoom-btn-hover: #555;
+    --primary-btn: #2196F3;
+    --primary-btn-hover: #0b7dda;
     --license-bg: #ffffff;
     --range-bg: #ddd;
 }
@@ -20,18 +16,15 @@
     --text-color: #e0e0e0;
     --panel-bg: #1e1e1e;
     --border-color: #444;
-    --primary-btn: #2E7D32;
-    --primary-btn-hover: #1B5E20;
-    --secondary-btn: #1565C0;
-    --secondary-btn-hover: #0D47A1;
-    --zoom-btn: #444;
-    --zoom-btn-hover: #333;
+    --primary-btn: #1565C0;
+    --primary-btn-hover: #0D47A1;
     --license-bg: #ffffff;
     --range-bg: #555;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -42,8 +35,16 @@ body {
 
 .header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.theme-toggle-container {
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .theme-toggle {
@@ -52,16 +53,18 @@ body {
     font-size: 24px;
     cursor: pointer;
     color: var(--text-color);
+    margin-left: 20px;
 }
 
 h1 {
     color: var(--text-color);
     text-align: center;
-    margin-bottom: 30px;
+    margin: 0;
+    font-size: 1.8em;
 }
 
 small {
-    font-size: 0.7em;
+    font-size: 0.8em;
     color: var(--text-color);
     opacity: 0.8;
 }
@@ -120,27 +123,23 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
 }
 
-button {
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.generate-btn {
+.download-btn {
+    margin-top: 20px;
     background-color: var(--primary-btn);
     width: 100%;
-    padding: 15px;
-    font-size: 18px;
+    padding: 12px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.generate-btn:hover {
+.download-btn:hover {
     background-color: var(--primary-btn-hover);
 }
 
@@ -157,67 +156,37 @@ button {
     background-color: var(--license-bg);
     min-height: 200px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    transform-origin: top left;
-    transition: transform 0.2s;
 }
 
-.license-logo {
-    max-width: 150px;
-    max-height: 80px;
-    margin-bottom: 15px;
+.license-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
-.license-brand {
+#preview-logo-container img {
+    object-fit: contain;
+    transition: max-width 0.3s, max-height 0.3s;
+}
+
+#preview-brand {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 10px;
     color: #000000;
 }
 
-.license-number {
+#preview-number {
     font-size: 32px;
     font-weight: bold;
-    margin: 15px 0;
     color: #000000;
     letter-spacing: 2px;
 }
 
 .hidden {
     display: none;
-}
-
-.preview-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.zoom-btn {
-    padding: 5px 15px;
-    font-size: 14px;
-    background-color: var(--zoom-btn);
-}
-
-.zoom-btn:hover {
-    background-color: var(--zoom-btn-hover);
-}
-
-.download-btn {
-    margin-top: 20px;
-    background-color: var(--secondary-btn);
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.download-btn:hover {
-    background-color: var(--secondary-btn-hover);
 }
 
 .range-value {
