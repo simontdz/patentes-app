@@ -16,12 +16,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewNumber = document.getElementById('preview-number');
     const licenseContent = document.querySelector('.license-content');
     const printBtn = document.getElementById('print-btn');
+    const mirrorBtn = document.getElementById('mirror-btn');
+    const licensePreview = document.querySelector('.license-preview');
 
     // Variables para control de escala del logo
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
 
     let logoUrl = null;
+    let isMirrored = false;
+
+    // Modo espejo
+    mirrorBtn.addEventListener('click', function() {
+        isMirrored = !isMirrored;
+        if (isMirrored) {
+            licensePreview.classList.add('mirror-mode');
+            mirrorBtn.textContent = 'MODO NORMAL';
+        } else {
+            licensePreview.classList.remove('mirror-mode');
+            mirrorBtn.textContent = 'MODO ESPEJO';
+        }
+    });
 
     // Modo oscuro/claro
     themeToggle.addEventListener('click', function() {
@@ -107,7 +122,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Descargar la patente como imagen
     downloadBtn.addEventListener('click', function() {
-        const licensePreview = document.querySelector('.license-preview');
+        // Desactivar temporalmente el modo espejo para la captura
+        const wasMirrored = isMirrored;
+        if (wasMirrored) {
+            licensePreview.classList.remove('mirror-mode');
+        }
 
         html2canvas(licensePreview, {
             scale: 2,
@@ -119,6 +138,11 @@ document.addEventListener('DOMContentLoaded', function() {
             link.download = 'patente-' + licenseNumberInput.value + '.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+            
+            // Restaurar el modo espejo si estaba activado
+            if (wasMirrored) {
+                licensePreview.classList.add('mirror-mode');
+            }
         }).catch(err => {
             console.error('Error al generar la imagen:', err);
             alert('Ocurrió un error al generar la imagen. Inténtalo de nuevo.');
@@ -137,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función de impresión mejorada
     printBtn.addEventListener('click', function() {
-        const licensePreview = document.querySelector('.license-preview');
         const printWindow = window.open('', '_blank');
 
         // Obtener estilos dinámicos
@@ -145,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const numberFontSize = previewNumber.style.fontSize;
         const logoMaxWidth = document.getElementById('logo-width') ? document.getElementById('logo-width').value : '150';
         const logoMaxHeight = document.getElementById('logo-height') ? document.getElementById('logo-height').value : '80';
+        const mirrorStyle = isMirrored ? 'transform: scaleX(-1);' : '';
 
         printWindow.document.write(`
             <!DOCTYPE html>
@@ -153,7 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <title>Imprimir Patente</title>
                 <style>
                     body { margin: 0; padding: 20px; display: flex; justify-content: center; }
-                    .license-preview { padding: 30px; text-align: center; background-color: white; }
+                    .license-preview { padding: 30px; text-align: center; background-color: white; ${mirrorStyle} }
+                    .license-content { display: flex; flex-direction: column; align-items: center; }
                     #preview-brand { font-size: ${brandFontSize}; font-weight: bold; }
                     #preview-number { font-size: ${numberFontSize}; font-weight: bold; letter-spacing: 2px; }
                     #preview-logo-container img {
