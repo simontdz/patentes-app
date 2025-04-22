@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const licenseContent = document.querySelector('.license-content');
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
-    const licensePreview = document.querySelector('.license-preview');
+    const licensePreview = document.getElementById('license-preview');
 
     // Variables para control de escala del logo
     const logoScaleInput = document.getElementById('logo-scale');
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoUrl = null;
     let isMirrored = false;
 
-    // Modo espejo
+    // Modo espejo mejorado
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
         if (isMirrored) {
@@ -120,14 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
         previewBrand.style.display = brand ? 'block' : 'none';
     }
 
-    // Descargar la patente como imagen
+    // Descargar la patente como imagen (mejorado para modo espejo)
     downloadBtn.addEventListener('click', function() {
-        // Desactivar temporalmente el modo espejo para la captura
-        const wasMirrored = isMirrored;
-        if (wasMirrored) {
-            licensePreview.classList.remove('mirror-mode');
-        }
-
         html2canvas(licensePreview, {
             scale: 2,
             backgroundColor: null,
@@ -138,11 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
             link.download = 'patente-' + licenseNumberInput.value + '.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
-            
-            // Restaurar el modo espejo si estaba activado
-            if (wasMirrored) {
-                licensePreview.classList.add('mirror-mode');
-            }
         }).catch(err => {
             console.error('Error al generar la imagen:', err);
             alert('Ocurrió un error al generar la imagen. Inténtalo de nuevo.');
@@ -159,37 +148,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Función de impresión mejorada
+    // Función de impresión mejorada con modo espejo y fuente Arial
     printBtn.addEventListener('click', function() {
         const printWindow = window.open('', '_blank');
-
-        // Obtener estilos dinámicos
-        const brandFontSize = previewBrand.style.fontSize;
-        const numberFontSize = previewNumber.style.fontSize;
-        const logoMaxWidth = document.getElementById('logo-width') ? document.getElementById('logo-width').value : '150';
-        const logoMaxHeight = document.getElementById('logo-height') ? document.getElementById('logo-height').value : '80';
-        const mirrorStyle = isMirrored ? 'transform: scaleX(-1);' : '';
-
+        
+        // Clonar el elemento para imprimir manteniendo los estilos
+        const clone = licensePreview.cloneNode(true);
+        
+        // Asegurarse de que el clon tenga los estilos correctos
+        clone.style.backgroundColor = 'white';
+        clone.style.padding = '30px';
+        clone.style.margin = '0 auto';
+        
+        // Aplicar transformación de espejo si está activado
+        if (isMirrored) {
+            clone.classList.add('mirror-mode');
+        }
+        
+        // Estilos CSS para la impresión
+        const styles = `
+            <style>
+                @page { margin: 0; size: auto; }
+                body { 
+                    margin: 0; 
+                    padding: 20px; 
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                    display: flex; 
+                    justify-content: center; 
+                    background-color: white !important;
+                }
+                .license-preview { 
+                    background-color: white !important;
+                    color: black !important;
+                }
+                #preview-brand, #preview-number {
+                    color: black !important;
+                }
+                .mirror-mode {
+                    transform: scaleX(-1);
+                }
+                .mirror-mode * {
+                    transform: scaleX(-1);
+                }
+            </style>
+        `;
+        
         printWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
                 <title>Imprimir Patente</title>
-                <style>
-                    body { margin: 0; padding: 20px; display: flex; justify-content: center; }
-                    .license-preview { padding: 30px; text-align: center; background-color: white; ${mirrorStyle} }
-                    .license-content { display: flex; flex-direction: column; align-items: center; }
-                    #preview-brand { font-size: ${brandFontSize}; font-weight: bold; }
-                    #preview-number { font-size: ${numberFontSize}; font-weight: bold; letter-spacing: 2px; }
-                    #preview-logo-container img {
-                        max-width: ${logoMaxWidth}px;
-                        max-height: ${logoMaxHeight}px;
-                        object-fit: contain;
-                    }
-                </style>
+                ${styles}
             </head>
             <body>
-                ${licensePreview.outerHTML}
+                ${clone.outerHTML}
                 <script>
                     window.onload = function() {
                         setTimeout(function() {
@@ -213,11 +226,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ajustes iniciales para los controles de escala y tamaño
     // Range de spacing
     spacingInput.min = 0;
-    spacingInput.max = 30; // Reducido de 50
-    spacingInput.value = 10; // Reducido de 20
+    spacingInput.max = 30;
+    spacingInput.value = 10;
 
     // Range de tamaño
-    sizeInput.min = 10; // Reducido de 12
-    sizeInput.max = 48; // Reducido de 72
-    sizeInput.value = 24; // Reducido de 32
+    sizeInput.min = 10;
+    sizeInput.max = 48;
+    sizeInput.value = 24;
 });

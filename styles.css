@@ -26,18 +26,6 @@
     --mirror-btn-hover: #FF8F00;
 }
 
-.dark-mode {
-    /* Colores modo oscuro */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --panel-bg: #1e1e1e;
-    --border-color: #444;
-    --primary-btn: #1565C0;
-    --primary-btn-hover: #0D47A1;
-    --license-bg: #ffffff;
-    --range-bg: #555;
-}
-
 body {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -174,6 +162,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s;
 }
 
 .license-content {
@@ -192,6 +181,7 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 24px;
     font-weight: bold;
     color: #000000;
+    font-family: Arial, sans-serif;
 }
 
 #preview-number {
@@ -199,6 +189,7 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
     color: #000000;
     letter-spacing: 2px;
+    font-family: Arial, sans-serif;
 }
 
 .hidden {
@@ -213,19 +204,17 @@ input[type="range"]::-webkit-slider-thumb {
     color: var(--text-color);
 }
 
-/* Opcional: ajustar el tamaño del contenedor de vista previa */
 .license-preview {
-    min-height: 150px; /* Reducido de 200px */
-    padding: 20px;     /* Reducido de 30px */
+    min-height: 150px;
+    padding: 20px;
 }
 
-/* Ajustar tamaños iniciales */
 #preview-brand {
-    font-size: 18px;   /* Reducido de 24px */
+    font-size: 18px;
 }
 
 #preview-number {
-    font-size: 24px;   /* Reducido de 32px */
+    font-size: 24px;
 }
 
 .mirror-btn {
