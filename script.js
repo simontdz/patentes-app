@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
     const licensePreview = document.getElementById('license-preview');
-
-    // Variables para control de escala del logo
+    const orientationSelect = document.getElementById('orientation');
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
 
@@ -38,10 +37,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Cambiar orientación
+    orientationSelect.addEventListener('change', function() {
+        if (this.value === 'vertical') {
+            licenseContent.classList.add('vertical-mode');
+        } else {
+            licenseContent.classList.remove('vertical-mode');
+        }
+    });
+
     // Modo oscuro/claro
     themeToggle.addEventListener('click', function() {
         body.classList.toggle('dark-mode');
-        body.classList.toggle('light-mode');
         themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
         localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
     });
@@ -50,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') {
         body.classList.add('dark-mode');
-        body.classList.remove('light-mode');
         themeToggle.textContent = '☀️';
     }
 
@@ -64,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePreview();
     });
 
-    // Cargar logo
+    // Cargar logo con mejor manejo de dimensiones
     logoUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         previewLogoContainer.innerHTML = '';
@@ -76,13 +82,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 logoUrl = event.target.result;
                 const img = document.createElement('img');
                 img.src = logoUrl;
-                // Ajustar tamaño inicial del logo
-                const scale = parseInt(logoScaleInput.value) / 100;
-                img.style.width = (150 * scale) + 'px';
-                img.style.height = (80 * scale) + 'px';
-                img.style.objectFit = 'contain';
-                previewLogoContainer.appendChild(img);
-                updatePreview();
+                
+                // Esperar a que la imagen cargue para obtener dimensiones originales
+                img.onload = function() {
+                    const scale = parseInt(logoScaleInput.value) / 100;
+                    const aspectRatio = img.naturalWidth / img.naturalHeight;
+                    const maxHeight = 100; // Altura máxima base
+                    
+                    // Aplicar escala manteniendo proporciones
+                    img.style.maxHeight = (maxHeight * scale) + 'px';
+                    img.style.width = 'auto';
+                    img.style.height = 'auto';
+                    img.style.objectFit = 'contain';
+                    
+                    previewLogoContainer.appendChild(img);
+                    updatePreview();
+                };
             };
             reader.readAsDataURL(file);
         }
@@ -120,42 +135,66 @@ document.addEventListener('DOMContentLoaded', function() {
         previewBrand.style.display = brand ? 'block' : 'none';
     }
 
-    // Descargar la patente como imagen (mejorado para modo espejo)
-    downloadBtn.addEventListener('click', function() {
-        html2canvas(licensePreview, {
-            scale: 2,
-            backgroundColor: null,
-            logging: false,
-            useCORS: true
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'patente-' + licenseNumberInput.value + '.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
-            console.error('Error al generar la imagen:', err);
-            alert('Ocurrió un error al generar la imagen. Inténtalo de nuevo.');
-        });
-    });
-
     // Controlador para el tamaño del logo (escala)
     logoScaleInput.addEventListener('input', function() {
         logoScaleValue.textContent = this.value + '%';
         if (previewLogoContainer.firstChild) {
             const scale = parseInt(this.value) / 100;
-            previewLogoContainer.firstChild.style.width = (150 * scale) + 'px';
-            previewLogoContainer.firstChild.style.height = (80 * scale) + 'px';
+            const img = previewLogoContainer.firstChild;
+            const maxHeight = 100; // Altura máxima base
+            
+            // Aplicar escala manteniendo proporciones
+            img.style.maxHeight = (maxHeight * scale) + 'px';
+            img.style.width = 'auto';
+            img.style.height = 'auto';
         }
     });
 
-    // Función de impresión mejorada con modo espejo y fuente Arial
+    // Descargar la patente como imagen (mejorado para modo espejo y orientación)
+    downloadBtn.addEventListener('click', function() {
+        // Clonamos el elemento para no afectar la visualización actual
+        const clone = licensePreview.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        document.body.appendChild(clone);
+
+        // Aplicamos estilos necesarios para la captura
+        clone.style.backgroundColor = 'white';
+        clone.style.padding = '30px';
+        clone.style.margin = '0 auto';
+        
+        // Si está en modo espejo, aplicamos la transformación al clon
+        if (isMirrored) {
+            clone.classList.add('mirror-mode');
+        }
+
+        html2canvas(clone, {
+            scale: 2,
+            backgroundColor: null,
+            logging: false,
+            useCORS: true,
+            allowTaint: true
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'patente-' + licenseNumberInput.value + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            document.body.removeChild(clone);
+        }).catch(err => {
+            console.error('Error al generar la imagen:', err);
+            alert('Ocurrió un error al generar la imagen. Inténtalo de nuevo.');
+            document.body.removeChild(clone);
+        });
+    });
+
+    // Función de impresión mejorada
     printBtn.addEventListener('click', function() {
         const printWindow = window.open('', '_blank');
         
-        // Clonar el elemento para imprimir manteniendo los estilos
+        // Clonar el elemento para imprimir
         const clone = licensePreview.cloneNode(true);
         
-        // Asegurarse de que el clon tenga los estilos correctos
+        // Aplicar estilos necesarios
         clone.style.backgroundColor = 'white';
         clone.style.padding = '30px';
         clone.style.margin = '0 auto';
@@ -164,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
-        
+
         // Estilos CSS para la impresión
         const styles = `
             <style>
@@ -173,14 +212,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     margin: 0; 
                     padding: 20px; 
                     font-family: Arial, sans-serif;
-                    font-size: 12px;
                     display: flex; 
                     justify-content: center; 
+                    align-items: center;
+                    min-height: 100vh;
                     background-color: white !important;
                 }
                 .license-preview { 
                     background-color: white !important;
                     color: black !important;
+                    box-shadow: none !important;
                 }
                 #preview-brand, #preview-number {
                     color: black !important;
@@ -190,6 +231,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 .mirror-mode * {
                     transform: scaleX(-1);
+                }
+                .vertical-mode .license-content {
+                    flex-direction: row !important;
+                    gap: 30px !important;
                 }
             </style>
         `;
@@ -223,14 +268,16 @@ document.addEventListener('DOMContentLoaded', function() {
     previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.75) + 'px';
     previewNumber.style.fontSize = sizeInput.value + 'px';
 
-    // Ajustes iniciales para los controles de escala y tamaño
-    // Range de spacing
+    // Ajustes iniciales para los controles
     spacingInput.min = 0;
-    spacingInput.max = 30;
-    spacingInput.value = 10;
+    spacingInput.max = 100;
+    spacingInput.value = 20;
 
-    // Range de tamaño
-    sizeInput.min = 10;
-    sizeInput.max = 48;
-    sizeInput.value = 24;
+    sizeInput.min = 12;
+    sizeInput.max = 120;
+    sizeInput.value = 48;
+
+    logoScaleInput.min = 10;
+    logoScaleInput.max = 300;
+    logoScaleInput.value = 100;
 });

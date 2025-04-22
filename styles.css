@@ -10,6 +10,8 @@
     --range-bg: #ddd;
     --mirror-btn: #FF9800;
     --mirror-btn-hover: #F57C00;
+    --orientation-btn: #4CAF50;
+    --orientation-btn-hover: #388E3C;
 }
 
 .dark-mode {
@@ -24,12 +26,14 @@
     --range-bg: #555;
     --mirror-btn: #FFA000;
     --mirror-btn-hover: #FF8F00;
+    --orientation-btn: #2E7D32;
+    --orientation-btn-hover: #1B5E20;
 }
 
 body {
     font-family: Arial, sans-serif;
     font-size: 14px;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     background-color: var(--bg-color);
@@ -64,7 +68,12 @@ h1 {
     color: var(--text-color);
     text-align: center;
     margin: 0;
-    font-size: 1.8em;
+    font-size: 2em;
+}
+
+h2 {
+    color: var(--text-color);
+    margin-top: 0;
 }
 
 small {
@@ -128,7 +137,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .download-btn {
-    margin-top: 20px;
+    margin-top: 10px;
     background-color: var(--primary-btn);
     width: 100%;
     padding: 12px;
@@ -162,7 +171,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: transform 0.3s;
+    transition: all 0.3s;
 }
 
 .license-content {
@@ -170,11 +179,14 @@ input[type="range"]::-webkit-slider-thumb {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    transition: all 0.3s;
 }
 
 #preview-logo-container img {
     object-fit: contain;
-    transition: max-width 0.3s, max-height 0.3s;
+    max-width: 100%;
+    max-height: 100px;
+    transition: all 0.3s;
 }
 
 #preview-brand {
@@ -182,14 +194,16 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
     color: #000000;
     font-family: Arial, sans-serif;
+    transition: all 0.3s;
 }
 
 #preview-number {
-    font-size: 32px;
+    font-size: 48px;
     font-weight: bold;
     color: #000000;
     letter-spacing: 2px;
     font-family: Arial, sans-serif;
+    transition: all 0.3s;
 }
 
 .hidden {
@@ -198,27 +212,14 @@ input[type="range"]::-webkit-slider-thumb {
 
 .range-value {
     display: inline-block;
-    width: 40px;
+    width: 50px;
     text-align: right;
     margin-left: 10px;
     color: var(--text-color);
 }
 
-.license-preview {
-    min-height: 150px;
-    padding: 20px;
-}
-
-#preview-brand {
-    font-size: 18px;
-}
-
-#preview-number {
-    font-size: 24px;
-}
-
 .mirror-btn {
-    margin-top: 20px;
+    margin-top: 10px;
     background-color: var(--mirror-btn);
     width: 100%;
     padding: 12px;
@@ -243,4 +244,33 @@ input[type="range"]::-webkit-slider-thumb {
 
 .mirror-mode * {
     transform: scaleX(-1);
+}
+
+/* Estilos para orientación vertical */
+.vertical-mode .license-content {
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+}
+
+/* Ajustes para impresión */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .license-preview, .license-preview * {
+        visibility: visible;
+    }
+    .license-preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white !important;
+        color: black !important;
+    }
+    #preview-brand, #preview-number {
+        color: black !important;
+    }
 }

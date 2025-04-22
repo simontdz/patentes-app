@@ -12,7 +12,7 @@
         <div class="theme-toggle-container">
             <button id="theme-toggle" class="theme-toggle">🌙</button>
         </div>
-        <h1>APP DE PATENTES<br><small>BIENVENIDO V1.0</small></h1>
+        <h1>APP DE PATENTES<br><small>BIENVENIDO V1.1</small></h1>
     </div>
     
     <div class="container">
@@ -58,20 +58,28 @@
             
             <div class="form-group">
                 <label for="spacing">Espaciado vertical (px):</label>
-                <input type="range" id="spacing" min="0" max="50" value="20">
+                <input type="range" id="spacing" min="0" max="100" value="20">
                 <span id="spacing-value" class="range-value">20 px</span>
             </div>
             
             <div class="form-group">
                 <label for="size">Tamaño de fuente:</label>
-                <input type="range" id="size" min="12" max="72" value="32">
-                <span id="size-value" class="range-value">32 px</span>
+                <input type="range" id="size" min="12" max="120" value="48">
+                <span id="size-value" class="range-value">48 px</span>
             </div>
             
-           <div class="form-group">
+            <div class="form-group">
                 <label for="logo-scale">Tamaño del logo (%):</label>
-                <input type="range" id="logo-scale" min="10" max="200" value="100">
+                <input type="range" id="logo-scale" min="10" max="300" value="100">
                 <span id="logo-scale-value" class="range-value">100%</span>
+            </div>
+
+            <div class="form-group">
+                <label for="orientation">Orientación:</label>
+                <select id="orientation">
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
             </div>
 
             <button class="mirror-btn" id="mirror-btn">MODO ESPEJO</button>
