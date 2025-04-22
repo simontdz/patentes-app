@@ -14,18 +14,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewLogoContainer = document.getElementById('preview-logo-container');
     const previewBrand = document.getElementById('preview-brand');
     const previewNumber = document.getElementById('preview-number');
-    const licenseContent = document.querySelector('.license-content');
+    const licenseContent = document.getElementById('license-content');
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
+    const orientationBtn = document.getElementById('orientation-btn');
     const licensePreview = document.getElementById('license-preview');
-    const orientationSelect = document.getElementById('orientation');
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
 
     let logoUrl = null;
     let isMirrored = false;
+    let isVertical = false;
 
-    // Modo espejo mejorado
+    // Modo espejo
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
         if (isMirrored) {
@@ -38,8 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Cambiar orientación
-    orientationSelect.addEventListener('change', function() {
-        if (this.value === 'vertical') {
+    orientationBtn.addEventListener('click', function() {
+        isVertical = !isVertical;
+        if (isVertical) {
             licenseContent.classList.add('vertical-mode');
         } else {
             licenseContent.classList.remove('vertical-mode');
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePreview();
     });
 
-    // Cargar logo con mejor manejo de dimensiones
+    // Cargar logo con manejo de proporciones
     logoUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         previewLogoContainer.innerHTML = '';
@@ -83,18 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const img = document.createElement('img');
                 img.src = logoUrl;
                 
-                // Esperar a que la imagen cargue para obtener dimensiones originales
                 img.onload = function() {
                     const scale = parseInt(logoScaleInput.value) / 100;
-                    const aspectRatio = img.naturalWidth / img.naturalHeight;
-                    const maxHeight = 100; // Altura máxima base
-                    
-                    // Aplicar escala manteniendo proporciones
-                    img.style.maxHeight = (maxHeight * scale) + 'px';
-                    img.style.width = 'auto';
-                    img.style.height = 'auto';
-                    img.style.objectFit = 'contain';
-                    
+                    applyLogoScale(img, scale);
                     previewLogoContainer.appendChild(img);
                     updatePreview();
                 };
@@ -102,6 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.readAsDataURL(file);
         }
     });
+
+    // Función para escalar el logo manteniendo proporciones
+    function applyLogoScale(img, scale) {
+        const maxWidth = 300 * scale;
+        const maxHeight = 150 * scale;
+        
+        // Calcular dimensiones manteniendo aspect ratio
+        const ratio = Math.min(
+            maxWidth / img.naturalWidth,
+            maxHeight / img.naturalHeight
+        );
+        
+        img.style.width = (img.naturalWidth * ratio) + 'px';
+        img.style.height = (img.naturalHeight * ratio) + 'px';
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+    }
 
     // Actualizar valores de los ranges
     spacingInput.addEventListener('input', function() {
@@ -111,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sizeInput.addEventListener('input', function() {
         sizeValue.textContent = this.value + ' px';
-        previewBrand.style.fontSize = (parseInt(this.value) * 0.75) + 'px';
+        previewBrand.style.fontSize = (parseInt(this.value) * 0.6) + 'px';
         previewNumber.style.fontSize = this.value + 'px';
     });
 
@@ -135,38 +145,38 @@ document.addEventListener('DOMContentLoaded', function() {
         previewBrand.style.display = brand ? 'block' : 'none';
     }
 
-    // Controlador para el tamaño del logo (escala)
+    // Controlador para el tamaño del logo
     logoScaleInput.addEventListener('input', function() {
         logoScaleValue.textContent = this.value + '%';
         if (previewLogoContainer.firstChild) {
             const scale = parseInt(this.value) / 100;
-            const img = previewLogoContainer.firstChild;
-            const maxHeight = 100; // Altura máxima base
-            
-            // Aplicar escala manteniendo proporciones
-            img.style.maxHeight = (maxHeight * scale) + 'px';
-            img.style.width = 'auto';
-            img.style.height = 'auto';
+            applyLogoScale(previewLogoContainer.firstChild, scale);
         }
     });
 
-    // Descargar la patente como imagen (mejorado para modo espejo y orientación)
+    // Descargar la patente como imagen
     downloadBtn.addEventListener('click', function() {
-        // Clonamos el elemento para no afectar la visualización actual
+        // Crear clon para la captura
         const clone = licensePreview.cloneNode(true);
-        clone.style.position = 'absolute';
+        clone.style.position = 'fixed';
         clone.style.left = '-9999px';
+        clone.style.backgroundColor = 'white';
+        clone.style.padding = '40px';
         document.body.appendChild(clone);
 
-        // Aplicamos estilos necesarios para la captura
-        clone.style.backgroundColor = 'white';
-        clone.style.padding = '30px';
-        clone.style.margin = '0 auto';
-        
-        // Si está en modo espejo, aplicamos la transformación al clon
+        // Aplicar orientación y modo espejo al clon
+        if (isVertical) {
+            clone.querySelector('.license-content').classList.add('vertical-mode');
+        }
         if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
+
+        // Ajustar estilos para la captura
+        const brandElement = clone.querySelector('#preview-brand');
+        const numberElement = clone.querySelector('#preview-number');
+        brandElement.style.fontSize = (parseInt(sizeInput.value) * 0.8) + 'px';
+        numberElement.style.fontSize = (parseInt(sizeInput.value) * 1.2) + 'px';
 
         html2canvas(clone, {
             scale: 2,
@@ -193,15 +203,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clonar el elemento para imprimir
         const clone = licensePreview.cloneNode(true);
-        
-        // Aplicar estilos necesarios
         clone.style.backgroundColor = 'white';
-        clone.style.padding = '30px';
-        clone.style.margin = '0 auto';
+        clone.style.padding = '40px';
         
-        // Aplicar transformación de espejo si está activado
+        // Aplicar orientación y modo espejo al clon
+        if (isVertical) {
+            clone.querySelector('.license-content').classList.add('vertical-mode');
+        }
         if (isMirrored) {
             clone.classList.add('mirror-mode');
+        }
+
+        // Ajustar tamaños para impresión
+        const brandElement = clone.querySelector('#preview-brand');
+        const numberElement = clone.querySelector('#preview-number');
+        brandElement.style.fontSize = (parseInt(sizeInput.value) * 1.2) + 'px';
+        numberElement.style.fontSize = (parseInt(sizeInput.value) * 1.8) + 'px';
+
+        const logoImg = clone.querySelector('#preview-logo-container img');
+        if (logoImg) {
+            logoImg.style.maxHeight = '200px';
         }
 
         // Estilos CSS para la impresión
@@ -210,8 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 @page { margin: 0; size: auto; }
                 body { 
                     margin: 0; 
-                    padding: 20px; 
-                    font-family: Arial, sans-serif;
+                    padding: 0; 
                     display: flex; 
                     justify-content: center; 
                     align-items: center;
@@ -222,6 +242,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     background-color: white !important;
                     color: black !important;
                     box-shadow: none !important;
+                    margin: 0 !important;
+                    padding: 40px !important;
                 }
                 #preview-brand, #preview-number {
                     color: black !important;
@@ -232,9 +254,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .mirror-mode * {
                     transform: scaleX(-1);
                 }
-                .vertical-mode .license-content {
+                .vertical-mode {
                     flex-direction: row !important;
-                    gap: 30px !important;
+                    gap: 60px !important;
+                }
+                #preview-logo-container img {
+                    max-height: 200px !important;
                 }
             </style>
         `;
@@ -265,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar vista previa
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.75) + 'px';
+    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.6) + 'px';
     previewNumber.style.fontSize = sizeInput.value + 'px';
 
     // Ajustes iniciales para los controles
@@ -275,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sizeInput.min = 12;
     sizeInput.max = 120;
-    sizeInput.value = 48;
+    sizeInput.value = 60;
 
     logoScaleInput.min = 10;
     logoScaleInput.max = 300;

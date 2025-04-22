@@ -100,6 +100,12 @@ small {
     margin-bottom: 15px;
 }
 
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
 label {
     display: block;
     margin-bottom: 5px;
@@ -182,28 +188,41 @@ input[type="range"]::-webkit-slider-thumb {
     transition: all 0.3s;
 }
 
+#preview-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    max-height: 150px;
+    overflow: hidden;
+}
+
 #preview-logo-container img {
     object-fit: contain;
     max-width: 100%;
-    max-height: 100px;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     transition: all 0.3s;
 }
 
 #preview-brand {
-    font-size: 24px;
+    font-size: 36px;
     font-weight: bold;
     color: #000000;
     font-family: Arial, sans-serif;
     transition: all 0.3s;
+    margin: 0;
 }
 
 #preview-number {
-    font-size: 48px;
+    font-size: 60px;
     font-weight: bold;
     color: #000000;
     letter-spacing: 2px;
     font-family: Arial, sans-serif;
     transition: all 0.3s;
+    margin: 0;
 }
 
 .hidden {
@@ -219,9 +238,8 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .mirror-btn {
-    margin-top: 10px;
+    flex: 1;
     background-color: var(--mirror-btn);
-    width: 100%;
     padding: 12px;
     font-size: 14px;
     font-weight: bold;
@@ -238,6 +256,22 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: var(--mirror-btn-hover);
 }
 
+.orientation-btn {
+    width: 50px;
+    background-color: var(--orientation-btn);
+    padding: 12px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.orientation-btn:hover {
+    background-color: var(--orientation-btn-hover);
+}
+
 .mirror-mode {
     transform: scaleX(-1);
 }
@@ -246,11 +280,10 @@ input[type="range"]::-webkit-slider-thumb {
     transform: scaleX(-1);
 }
 
-/* Estilos para orientación vertical */
-.vertical-mode .license-content {
-    flex-direction: row;
-    gap: 30px;
-    align-items: center;
+/* Estilos para orientación horizontal/vertical */
+.vertical-mode {
+    flex-direction: row !important;
+    gap: 40px !important;
 }
 
 /* Ajustes para impresión */
@@ -269,8 +302,24 @@ input[type="range"]::-webkit-slider-thumb {
         height: 100%;
         background-color: white !important;
         color: black !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
-    #preview-brand, #preview-number {
+    .license-content {
+        gap: 30px !important;
+    }
+    #preview-brand {
+        font-size: 60px !important;
         color: black !important;
+    }
+    #preview-number {
+        font-size: 80px !important;
+        color: black !important;
+    }
+    #preview-logo-container img {
+        max-height: 200px !important;
     }
 }
