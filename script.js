@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('theme-toggle');
     const brandSelect = document.getElementById('brand');
     const customBrandGroup = document.getElementById('custom-brand-group');
+    const customBrandInput = document.getElementById('custom-brand');
     const logoUpload = document.getElementById('logo-upload');
     const licenseNumberInput = document.getElementById('license-number');
     const spacingInput = document.getElementById('spacing');
@@ -21,10 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const licensePreview = document.getElementById('license-preview');
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
+    const chassisGroup = document.getElementById('chassis-group');
+    const chassisNumberInput = document.getElementById('chassis-number');
+    const toggleChassisBtn = document.getElementById('toggle-chassis');
 
     let logoUrl = null;
     let isMirrored = false;
-    let isVertical = false;
+    let rotationAngle = 0;
+
+    // Crear elemento para el número de chasis en la vista previa
+    const previewChassis = document.createElement('div');
+    previewChassis.id = 'preview-chassis';
+    licenseContent.appendChild(previewChassis);
 
     // Modo espejo
     mirrorBtn.addEventListener('click', function() {
@@ -38,13 +47,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Cambiar orientación
+    // Rotar vista previa (versión corregida)
     orientationBtn.addEventListener('click', function() {
-        isVertical = !isVertical;
-        if (isVertical) {
-            licenseContent.classList.add('vertical-mode');
+        // Remover todas las clases de rotación primero
+        licensePreview.classList.remove('rotated-90', 'rotated-180', 'rotated-270');
+        
+        // Calcular nuevo ángulo de rotación
+        rotationAngle = (rotationAngle + 90) % 360;
+        
+        // Aplicar rotación correspondiente
+        if (rotationAngle === 90) {
+            licensePreview.classList.add('rotated-90');
+            orientationBtn.textContent = '↻ 180°';
+        } else if (rotationAngle === 180) {
+            licensePreview.classList.add('rotated-180');
+            orientationBtn.textContent = '↻ 270°';
+        } else if (rotationAngle === 270) {
+            licensePreview.classList.add('rotated-270');
+            orientationBtn.textContent = '↻ 0°';
         } else {
-            licenseContent.classList.remove('vertical-mode');
+            orientationBtn.textContent = '↻ 90°';
         }
     });
 
@@ -66,10 +88,23 @@ document.addEventListener('DOMContentLoaded', function() {
     brandSelect.addEventListener('change', function() {
         if (this.value === 'OTRA') {
             customBrandGroup.classList.remove('hidden');
+            customBrandInput.focus();
         } else {
             customBrandGroup.classList.add('hidden');
         }
         updatePreview();
+    });
+
+    // Mostrar/ocultar campo de chasis
+    toggleChassisBtn.addEventListener('click', function() {
+        chassisGroup.classList.toggle('hidden');
+        if (chassisGroup.classList.contains('hidden')) {
+            this.textContent = '+ Agregar número de chasis';
+            previewChassis.textContent = '';
+        } else {
+            this.textContent = '- Ocultar número de chasis';
+            chassisNumberInput.focus();
+        }
     });
 
     // Cargar logo con manejo de proporciones
@@ -101,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxWidth = 300 * scale;
         const maxHeight = 150 * scale;
         
-        // Calcular dimensiones manteniendo aspect ratio
         const ratio = Math.min(
             maxWidth / img.naturalWidth,
             maxHeight / img.naturalHeight
@@ -130,15 +164,19 @@ document.addEventListener('DOMContentLoaded', function() {
         previewNumber.textContent = this.value.toUpperCase();
     });
 
-    // Actualizar vista previa cuando cambia la marca
-    document.getElementById('custom-brand').addEventListener('input', function() {
-        updatePreview();
+    // Actualizar vista previa cuando cambia el número de chasis
+    chassisNumberInput.addEventListener('input', function() {
+        previewChassis.textContent = this.value.toUpperCase();
     });
+
+    // Actualizar vista previa cuando cambia la marca
+    customBrandInput.addEventListener('input', updatePreview);
+    brandSelect.addEventListener('change', updatePreview);
 
     // Función para actualizar la marca en la vista previa
     function updatePreview() {
         const brand = brandSelect.value === 'OTRA' 
-            ? document.getElementById('custom-brand').value.toUpperCase() 
+            ? customBrandInput.value.toUpperCase() 
             : brandSelect.value;
 
         previewBrand.textContent = brand || '';
@@ -164,19 +202,17 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.style.padding = '40px';
         document.body.appendChild(clone);
 
-        // Aplicar orientación y modo espejo al clon
-        if (isVertical) {
-            clone.querySelector('.license-content').classList.add('vertical-mode');
+        // Aplicar transformaciones actuales al clon
+        if (rotationAngle === 90) {
+            clone.classList.add('rotated-90');
+        } else if (rotationAngle === 180) {
+            clone.classList.add('rotated-180');
+        } else if (rotationAngle === 270) {
+            clone.classList.add('rotated-270');
         }
         if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
-
-        // Ajustar estilos para la captura
-        const brandElement = clone.querySelector('#preview-brand');
-        const numberElement = clone.querySelector('#preview-number');
-        brandElement.style.fontSize = (parseInt(sizeInput.value) * 0.8) + 'px';
-        numberElement.style.fontSize = (parseInt(sizeInput.value) * 1.2) + 'px';
 
         html2canvas(clone, {
             scale: 2,
@@ -204,25 +240,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clonar el elemento para imprimir
         const clone = licensePreview.cloneNode(true);
         clone.style.backgroundColor = 'white';
-        clone.style.padding = '40px';
+        clone.style.padding = '30px';
         
-        // Aplicar orientación y modo espejo al clon
-        if (isVertical) {
-            clone.querySelector('.license-content').classList.add('vertical-mode');
+        // Aplicar rotación actual al clon
+        if (rotationAngle === 90) {
+            clone.classList.add('rotated-90');
+        } else if (rotationAngle === 180) {
+            clone.classList.add('rotated-180');
+        } else if (rotationAngle === 270) {
+            clone.classList.add('rotated-270');
         }
         if (isMirrored) {
             clone.classList.add('mirror-mode');
-        }
-
-        // Ajustar tamaños para impresión
-        const brandElement = clone.querySelector('#preview-brand');
-        const numberElement = clone.querySelector('#preview-number');
-        brandElement.style.fontSize = (parseInt(sizeInput.value) * 1.2) + 'px';
-        numberElement.style.fontSize = (parseInt(sizeInput.value) * 1.8) + 'px';
-
-        const logoImg = clone.querySelector('#preview-logo-container img');
-        if (logoImg) {
-            logoImg.style.maxHeight = '200px';
         }
 
         // Estilos CSS para la impresión
@@ -231,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 @page { margin: 0; size: auto; }
                 body { 
                     margin: 0; 
-                    padding: 0; 
+                    padding: 20px; 
                     display: flex; 
                     justify-content: center; 
                     align-items: center;
@@ -242,24 +271,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     background-color: white !important;
                     color: black !important;
                     box-shadow: none !important;
-                    margin: 0 !important;
-                    padding: 40px !important;
                 }
-                #preview-brand, #preview-number {
+                #preview-brand, #preview-number, #preview-chassis {
                     color: black !important;
+                }
+                #preview-chassis {
+                    font-size: 18px !important;
+                    color: #444 !important;
+                }
+                .rotated-90 {
+                    transform: rotate(90deg);
+                    transform-origin: center;
+                }
+                .rotated-180 {
+                    transform: rotate(180deg);
+                    transform-origin: center;
+                }
+                .rotated-270 {
+                    transform: rotate(270deg);
+                    transform-origin: center;
                 }
                 .mirror-mode {
                     transform: scaleX(-1);
                 }
                 .mirror-mode * {
                     transform: scaleX(-1);
-                }
-                .vertical-mode {
-                    flex-direction: row !important;
-                    gap: 60px !important;
-                }
-                #preview-logo-container img {
-                    max-height: 200px !important;
                 }
             </style>
         `;

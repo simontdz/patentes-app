@@ -12,6 +12,7 @@
     --mirror-btn-hover: #F57C00;
     --orientation-btn: #4CAF50;
     --orientation-btn-hover: #388E3C;
+    --toggle-btn: #2196F3;
 }
 
 .dark-mode {
@@ -28,6 +29,7 @@
     --mirror-btn-hover: #FF8F00;
     --orientation-btn: #2E7D32;
     --orientation-btn-hover: #1B5E20;
+    --toggle-btn: #1565C0;
 }
 
 body {
@@ -225,6 +227,14 @@ input[type="range"]::-webkit-slider-thumb {
     margin: 0;
 }
 
+#preview-chassis {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+    word-break: break-all;
+    max-width: 100%;
+}
+
 .hidden {
     display: none;
 }
@@ -272,6 +282,22 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: var(--orientation-btn-hover);
 }
 
+.toggle-btn {
+    background: none;
+    border: none;
+    color: var(--toggle-btn);
+    cursor: pointer;
+    padding: 8px 0;
+    margin: 5px 0;
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+}
+
+.toggle-btn:hover {
+    text-decoration: underline;
+}
+
 .mirror-mode {
     transform: scaleX(-1);
 }
@@ -280,10 +306,22 @@ input[type="range"]::-webkit-slider-thumb {
     transform: scaleX(-1);
 }
 
-/* Estilos para orientación horizontal/vertical */
-.vertical-mode {
-    flex-direction: row !important;
-    gap: 40px !important;
+/* Estilos para rotación */
+.rotated-90 {
+    transform: rotate(90deg);
+    transform-origin: center;
+    margin: 20px 0;
+}
+
+.rotated-180 {
+    transform: rotate(180deg);
+    transform-origin: center;
+}
+
+.rotated-270 {
+    transform: rotate(270deg);
+    transform-origin: center;
+    margin: 20px 0;
 }
 
 /* Ajustes para impresión */
@@ -318,6 +356,10 @@ input[type="range"]::-webkit-slider-thumb {
     #preview-number {
         font-size: 80px !important;
         color: black !important;
+    }
+    #preview-chassis {
+        font-size: 18px !important;
+        color: #444 !important;
     }
     #preview-logo-container img {
         max-height: 200px !important;
