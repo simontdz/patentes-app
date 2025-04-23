@@ -142,6 +142,43 @@ document.addEventListener('DOMContentLoaded', function() {
         img.style.height = (img.naturalHeight * ratio) + 'px';
     }
 
+    // Ajustes iniciales para los controles con valores máximos
+    spacingInput.min = 0;
+    spacingInput.max = 50; // Reducido de 100
+    spacingInput.value = 5; // Reducido de 15
+    spacingValue.textContent = '5 px';
+
+    sizeInput.min = 30; // Aumentado de 20
+    sizeInput.max = 80; // Reducido de 100 (para móvil)
+    sizeInput.value = 60; // Aumentado de 48
+    sizeValue.textContent = '60 px';
+
+    chassisSizeInput.min = 12; // Aumentado de 8
+    chassisSizeInput.max = 36; // Reducido de 40
+    chassisSizeInput.value = 24; // Aumentado de 18
+    chassisSizeValue.textContent = '24 px';
+
+    logoScaleInput.min = 50; // Aumentado de 10
+    logoScaleInput.max = 200; // Reducido de 300
+    logoScaleInput.value = 100;
+    logoScaleValue.textContent = '100%';
+
+    // Función para escalar el logo con límites más ajustados
+    function applyLogoScale(img, scale) {
+        const maxWidth = 250 * scale; // Reducido de 300
+        const maxHeight = 80 * scale; // Reducido de 120
+        
+        const ratio = Math.min(
+            maxWidth / img.naturalWidth,
+            maxHeight / img.naturalHeight
+        );
+        
+        img.style.width = (img.naturalWidth * ratio) + 'px';
+        img.style.height = (img.naturalHeight * ratio) + 'px';
+        img.style.maxWidth = '90%'; // Limitamos más el logo
+        img.style.maxHeight = '90%';
+    }
+
     // Actualizar valores de los ranges
     spacingInput.addEventListener('input', function() {
         spacingValue.textContent = this.value + ' px';

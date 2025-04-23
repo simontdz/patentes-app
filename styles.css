@@ -333,6 +333,82 @@ input[type="range"]::-webkit-slider-thumb {
     .license-preview, .license-preview * {
         visibility: visible;
     }
+/* ... (mantener todo lo anterior hasta .license-preview) ... */
+
+.license-preview {
+    padding: 5px; /* Reducido de 20px */
+    text-align: center;
+    background-color: var(--license-bg);
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    min-height: 250px; /* Aumentado para móvil */
+}
+
+.license-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Reducido de 15px */
+    width: 100%;
+    max-width: 100%;
+    padding: 5px; /* Añadido */
+}
+
+#preview-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    max-height: 100px; /* Reducido para dejar más espacio */
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+#preview-brand {
+    font-size: 32px; /* Tamaño base aumentado */
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 1.1;
+}
+
+#preview-number {
+    font-size: 48px; /* Tamaño base aumentado */
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+#preview-chassis {
+    font-size: 18px;
+    color: #000;
+    margin: 3px 0 0; /* Reducido */
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    word-break: break-word;
+    line-height: 1.1;
+}
+
+/* ... (mantener el resto igual) ... */
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .license-preview, .license-preview * {
+        visibility: visible;
+    }
     .license-preview {
         position: absolute;
         left: 0;
@@ -343,66 +419,32 @@ input[type="range"]::-webkit-slider-thumb {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 10mm !important;
+        padding: 2mm !important; /* Reducido de 10mm */
         margin: 0 !important;
     }
     .license-content {
-        gap: 10mm !important;
+        gap: 2mm !important; /* Reducido de 10mm */
         width: 100% !important;
+        max-width: 100% !important;
     }
     #preview-brand {
-        font-size: 15mm !important;
-        color: black !important;
+        font-size: 20mm !important; /* Aumentado de 15mm */
+        margin: 1mm 0 !important;
     }
     #preview-number {
-        font-size: 20mm !important;
-        color: black !important;
+        font-size: 25mm !important; /* Aumentado de 20mm */
+        margin: 1mm 0 !important;
     }
     #preview-chassis {
-        font-size: 8mm !important;
-        color: black !important;
+        font-size: 10mm !important; /* Aumentado de 8mm */
+        margin: 1mm 0 !important;
+    }
+    #preview-logo-container {
+        max-height: 25mm !important; /* Ajustado */
+        margin: 1mm 0 !important;
     }
     #preview-logo-container img {
-        max-height: 30mm !important;
-    }
-    .rotated-180 {
-        transform: rotate(180deg) !important;
-    }
-    .mirror-mode {
-        transform: scaleX(-1) !important;
-    }
-    .rotated-180.mirror-mode {
-        transform: rotate(180deg) scaleX(-1) !important;
+        max-height: 25mm !important; /* Ajustado */
     }
 }
-
-/* Media queries para móviles */
-@media (max-width: 480px) {
-    .container {
-        gap: 10px;
-    }
-    
-    .form-section, .preview-section {
-        padding: 12px;
-    }
-    
-    #preview-brand {
-        font-size: 28px;
-    }
-    
-    #preview-number {
-        font-size: 40px;
-    }
-    
-    #preview-chassis {
-        font-size: 16px;
-    }
-    
-    .button-group {
-        flex-direction: column;
-    }
-    
-    .orientation-btn {
-        width: 100%;
-    }
 }
