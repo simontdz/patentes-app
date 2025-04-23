@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const spacingValue = document.getElementById('spacing-value');
     const sizeInput = document.getElementById('size');
     const sizeValue = document.getElementById('size-value');
+    const brandSizeInput = document.getElementById('brand-size');
+    const brandSizeValue = document.getElementById('brand-size-value');
     const downloadBtn = document.getElementById('download-btn');
     const previewLogoContainer = document.getElementById('preview-logo-container');
     const previewBrand = document.getElementById('preview-brand');
@@ -19,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const licenseContent = document.getElementById('license-content');
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
-    const orientationBtn = document.getElementById('orientation-btn');
     const licensePreview = document.getElementById('license-preview');
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
@@ -31,42 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let logoUrl = null;
     let isMirrored = false;
-    let isRotated = false;
 
     // Modo espejo
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
-        updateTransforms();
-    });
-
-    // Rotación 180°
-    orientationBtn.addEventListener('click', function() {
-        isRotated = !isRotated;
-        updateTransforms();
-    });
-
-    function updateTransforms() {
-        // Resetear todas las transformaciones
-        licensePreview.classList.remove('rotated-180', 'mirror-mode');
-        
-        // Aplicar transformaciones según el estado actual
-        if (isRotated && isMirrored) {
-            licensePreview.classList.add('rotated-180', 'mirror-mode');
-            orientationBtn.textContent = 'ROTAR 0°';
-            mirrorBtn.textContent = 'MODO NORMAL';
-        } else if (isRotated) {
-            licensePreview.classList.add('rotated-180');
-            orientationBtn.textContent = 'ROTAR 0°';
-            mirrorBtn.textContent = 'MODO ESPEJO';
-        } else if (isMirrored) {
+        if (isMirrored) {
             licensePreview.classList.add('mirror-mode');
-            orientationBtn.textContent = 'ROTAR 180°';
             mirrorBtn.textContent = 'MODO NORMAL';
         } else {
-            orientationBtn.textContent = 'ROTAR 180°';
+            licensePreview.classList.remove('mirror-mode');
             mirrorBtn.textContent = 'MODO ESPEJO';
         }
-    }
+    });
 
     // Modo oscuro/claro
     themeToggle.addEventListener('click', function() {
@@ -130,8 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para escalar el logo
     function applyLogoScale(img, scale) {
-        const maxWidth = 300 * scale;
-        const maxHeight = 120 * scale;
+        const maxWidth = 250 * scale;
+        const maxHeight = 80 * scale;
         
         const ratio = Math.min(
             maxWidth / img.naturalWidth,
@@ -140,42 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         img.style.width = (img.naturalWidth * ratio) + 'px';
         img.style.height = (img.naturalHeight * ratio) + 'px';
-    }
-
-    // Ajustes iniciales para los controles con valores máximos
-    spacingInput.min = 0;
-    spacingInput.max = 50; // Reducido de 100
-    spacingInput.value = 5; // Reducido de 15
-    spacingValue.textContent = '5 px';
-
-    sizeInput.min = 30; // Aumentado de 20
-    sizeInput.max = 80; // Reducido de 100 (para móvil)
-    sizeInput.value = 60; // Aumentado de 48
-    sizeValue.textContent = '60 px';
-
-    chassisSizeInput.min = 12; // Aumentado de 8
-    chassisSizeInput.max = 36; // Reducido de 40
-    chassisSizeInput.value = 24; // Aumentado de 18
-    chassisSizeValue.textContent = '24 px';
-
-    logoScaleInput.min = 50; // Aumentado de 10
-    logoScaleInput.max = 200; // Reducido de 300
-    logoScaleInput.value = 100;
-    logoScaleValue.textContent = '100%';
-
-    // Función para escalar el logo con límites más ajustados
-    function applyLogoScale(img, scale) {
-        const maxWidth = 250 * scale; // Reducido de 300
-        const maxHeight = 80 * scale; // Reducido de 120
-        
-        const ratio = Math.min(
-            maxWidth / img.naturalWidth,
-            maxHeight / img.naturalHeight
-        );
-        
-        img.style.width = (img.naturalWidth * ratio) + 'px';
-        img.style.height = (img.naturalHeight * ratio) + 'px';
-        img.style.maxWidth = '90%'; // Limitamos más el logo
+        img.style.maxWidth = '90%';
         img.style.maxHeight = '90%';
     }
 
@@ -187,8 +129,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sizeInput.addEventListener('input', function() {
         sizeValue.textContent = this.value + ' px';
-        previewBrand.style.fontSize = (parseInt(this.value) * 0.7) + 'px';
         previewNumber.style.fontSize = this.value + 'px';
+    });
+
+    brandSizeInput.addEventListener('input', function() {
+        brandSizeValue.textContent = this.value + ' px';
+        previewBrand.style.fontSize = this.value + 'px';
     });
 
     chassisSizeInput.addEventListener('input', function() {
@@ -236,12 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.style.padding = '20px';
         document.body.appendChild(clone);
 
-        // Aplicar transformaciones actuales al clon
-        if (isRotated && isMirrored) {
-            clone.classList.add('rotated-180', 'mirror-mode');
-        } else if (isRotated) {
-            clone.classList.add('rotated-180');
-        } else if (isMirrored) {
+        // Aplicar modo espejo si está activo
+        if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
@@ -273,12 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.style.backgroundColor = 'white';
         clone.style.padding = '20px';
         
-        // Aplicar transformaciones actuales al clon
-        if (isRotated && isMirrored) {
-            clone.classList.add('rotated-180', 'mirror-mode');
-        } else if (isRotated) {
-            clone.classList.add('rotated-180');
-        } else if (isMirrored) {
+        // Aplicar modo espejo si está activo
+        if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
@@ -288,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 @page { margin: 0; size: auto; }
                 body { 
                     margin: 0; 
-                    padding: 10mm; 
+                    padding: 2mm; 
                     display: flex; 
                     justify-content: center; 
                     align-items: center;
@@ -299,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     background-color: white !important;
                     color: black !important;
                     box-shadow: none !important;
-                    padding: 10mm !important;
+                    padding: 2mm !important;
                     width: 100% !important;
                     height: auto !important;
                 }
@@ -307,25 +245,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     color: black !important;
                 }
                 #preview-brand {
-                    font-size: 15mm !important;
+                    font-size: 25mm !important;
+                    margin: 1mm 0 !important;
                 }
                 #preview-number {
-                    font-size: 20mm !important;
+                    font-size: 30mm !important;
+                    margin: 1mm 0 !important;
                 }
                 #preview-chassis {
-                    font-size: 8mm !important;
+                    font-size: 12mm !important;
+                    margin: 1mm 0 !important;
+                }
+                #preview-logo-container {
+                    max-height: 25mm !important;
+                    margin: 1mm 0 !important;
                 }
                 #preview-logo-container img {
-                    max-height: 30mm !important;
-                }
-                .rotated-180 {
-                    transform: rotate(180deg) !important;
+                    max-height: 25mm !important;
                 }
                 .mirror-mode {
                     transform: scaleX(-1) !important;
-                }
-                .rotated-180.mirror-mode {
-                    transform: rotate(180deg) scaleX(-1) !important;
                 }
             </style>
         `;
@@ -356,20 +295,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar vista previa
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.7) + 'px';
     previewNumber.style.fontSize = sizeInput.value + 'px';
+    previewBrand.style.fontSize = brandSizeInput.value + 'px';
     previewChassis.style.fontSize = chassisSizeInput.value + 'px';
 
     // Ajustes iniciales para los controles
-    spacingInput.value = 15;
-    spacingValue.textContent = '15 px';
+    spacingInput.value = 5;
+    spacingValue.textContent = '5 px';
 
-    sizeInput.value = 48;
-    sizeValue.textContent = '48 px';
+    sizeInput.value = 80;
+    sizeValue.textContent = '80 px';
+
+    brandSizeInput.value = 48;
+    brandSizeValue.textContent = '48 px';
 
     logoScaleInput.value = 100;
     logoScaleValue.textContent = '100%';
 
-    chassisSizeInput.value = 18;
-    chassisSizeValue.textContent = '18 px';
+    chassisSizeInput.value = 24;
+    chassisSizeValue.textContent = '24 px';
 });
