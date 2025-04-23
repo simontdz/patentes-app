@@ -200,7 +200,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 300px;
+    min-height: 400px;
 }
 
 .license-preview {
@@ -214,13 +214,14 @@ input[type="range"]::-webkit-slider-thumb {
     align-items: center;
     transition: all 0.3s;
     font-family: Arial, sans-serif;
+    min-height: 350px;
 }
 
 .license-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
     width: 100%;
     max-width: 100%;
     padding: 5px;
@@ -237,26 +238,27 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 #preview-brand {
-    font-size: 48px;
+    font-size: 60px;
     font-weight: bold;
     color: #000;
     margin: 0;
     width: 100%;
     text-align: center;
-    line-height: 1.1;
+    line-height: 1;
     font-family: Arial, sans-serif;
 }
 
 #preview-number {
-    font-size: 80px;
+    font-size: 120px;
     font-weight: bold;
     color: #000;
     margin: 0;
     width: 100%;
     text-align: center;
     letter-spacing: 2px;
-    line-height: 1.1;
+    line-height: 1;
     font-family: Arial, sans-serif;
+    word-break: break-all;
 }
 
 #preview-chassis {
@@ -267,7 +269,7 @@ input[type="range"]::-webkit-slider-thumb {
     text-align: center;
     font-weight: bold;
     word-break: break-word;
-    line-height: 1.1;
+    line-height: 1;
     font-family: Arial, sans-serif;
 }
 
@@ -337,33 +339,36 @@ input[type="range"]::-webkit-slider-thumb {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 2mm !important;
+        padding: 1mm !important;
         margin: 0 !important;
     }
     .license-content {
-        gap: 2mm !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 5mm !important;
+        gap: 1mm !important;
+        width: 90% !important;
+        max-width: 90% !important;
+        padding: 1mm !important;
+        margin: 0 auto !important;
     }
     #preview-brand {
-        font-size: 30mm !important;
-        margin: 1mm 0 !important;
+        font-size: 35mm !important;
+        margin: 0.5mm 0 !important;
     }
     #preview-number {
-        font-size: 40mm !important;
-        margin: 1mm 0 !important;
+        font-size: 45mm !important;
+        margin: 0.5mm 0 !important;
+        letter-spacing: 1mm !important;
+        word-break: break-all !important;
     }
     #preview-chassis {
-        font-size: 15mm !important;
-        margin: 1mm 0 !important;
+        font-size: 18mm !important;
+        margin: 0.5mm 0 !important;
     }
     #preview-logo-container {
-        max-height: 30mm !important;
-        margin: 2mm 0 !important;
+        max-height: 35mm !important;
+        margin: 0.5mm 0 !important;
     }
     #preview-logo-container img {
-        max-height: 30mm !important;
+        max-height: 35mm !important;
         max-width: 100% !important;
     }
     .mirror-mode {
@@ -385,7 +390,7 @@ input[type="range"]::-webkit-slider-thumb {
     }
     
     #preview-number {
-        font-size: 60px;
+        font-size: 80px;
     }
     
     #preview-chassis {

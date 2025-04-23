@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let logoUrl = null;
     let isMirrored = false;
 
+    // Ajustar rangos para permitir tamaños mayores
+    sizeInput.setAttribute('max', '200');
+    brandSizeInput.setAttribute('max', '100');
+
     // Modo espejo
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
@@ -222,51 +226,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Estilos CSS para la impresión
         const styles = `
-             <style>
-        /* ... (mantén el resto de estilos igual) ... */
-        #preview-brand {
-            font-size: 30mm !important;  // Aumentado de 25mm
-            margin: 1mm 0 !important;
-        }
-        #preview-number {
-            font-size: 40mm !important;  // Aumentado de 30mm
-            margin: 1mm 0 !important;
-        }
-        #preview-chassis {
-            font-size: 15mm !important;  // Aumentado de 12mm
-            margin: 1mm 0 !important;
-        }
-        /* ... */
-    </style>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
                 .license-preview { 
                     background-color: white !important;
                     color: black !important;
                     box-shadow: none !important;
-                    padding: 2mm !important;
+                    padding: 1mm !important;
                     width: 100% !important;
-                    height: auto !important;
+                    height: 100% !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                }
+                .license-content {
+                    gap: 1mm !important;
+                    width: 90% !important;
+                    max-width: 90% !important;
+                    padding: 1mm !important;
+                    margin: 0 auto !important;
                 }
                 #preview-brand, #preview-number, #preview-chassis {
                     color: black !important;
                 }
                 #preview-brand {
-                    font-size: 25mm !important;
-                    margin: 1mm 0 !important;
+                    font-size: 35mm !important;
+                    margin: 0.5mm 0 !important;
                 }
                 #preview-number {
-                    font-size: 30mm !important;
-                    margin: 1mm 0 !important;
+                    font-size: 45mm !important;
+                    margin: 0.5mm 0 !important;
+                    letter-spacing: 1mm !important;
+                    word-break: break-all !important;
                 }
                 #preview-chassis {
-                    font-size: 12mm !important;
-                    margin: 1mm 0 !important;
+                    font-size: 18mm !important;
+                    margin: 0.5mm 0 !important;
                 }
                 #preview-logo-container {
-                    max-height: 25mm !important;
-                    margin: 1mm 0 !important;
+                    max-height: 35mm !important;
+                    margin: 0.5mm 0 !important;
                 }
                 #preview-logo-container img {
-                    max-height: 25mm !important;
+                    max-height: 35mm !important;
+                    max-width: 100% !important;
                 }
                 .mirror-mode {
                     transform: scaleX(-1) !important;
@@ -300,19 +306,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar vista previa
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewNumber.style.fontSize = sizeInput.value + 'px';
-    previewBrand.style.fontSize = brandSizeInput.value + 'px';
+    previewNumber.style.fontSize = '100px';
+    previewBrand.style.fontSize = '60px';
     previewChassis.style.fontSize = chassisSizeInput.value + 'px';
 
     // Ajustes iniciales para los controles
     spacingInput.value = 5;
     spacingValue.textContent = '5 px';
 
-    sizeInput.value = 80;
-    sizeValue.textContent = '80 px';
+    sizeInput.value = 100;
+    sizeValue.textContent = '100 px';
 
-    brandSizeInput.value = 48;
-    brandSizeValue.textContent = '48 px';
+    brandSizeInput.value = 60;
+    brandSizeValue.textContent = '60 px';
 
     logoScaleInput.value = 100;
     logoScaleValue.textContent = '100%';
