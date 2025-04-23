@@ -61,28 +61,31 @@
             <div class="form-group hidden" id="chassis-group">
                 <label for="chassis-number">Número de chasis (opcional):</label>
                 <input type="text" id="chassis-number" placeholder="Ingresa el número de chasis">
+                <label for="chassis-size">Tamaño de fuente chasis:</label>
+                <input type="range" id="chassis-size" min="8" max="60" value="24">
+                <span id="chassis-size-value" class="range-value">24 px</span>
             </div>
             
             <div class="form-group">
                 <label for="spacing">Espaciado vertical (px):</label>
-                <input type="range" id="spacing" min="0" max="100" value="20">
-                <span id="spacing-value" class="range-value">20 px</span>
+                <input type="range" id="spacing" min="0" max="150" value="30">
+                <span id="spacing-value" class="range-value">30 px</span>
             </div>
             
             <div class="form-group">
-                <label for="size">Tamaño de fuente:</label>
-                <input type="range" id="size" min="12" max="120" value="60">
-                <span id="size-value" class="range-value">60 px</span>
+                <label for="size">Tamaño de fuente patente:</label>
+                <input type="range" id="size" min="20" max="150" value="80">
+                <span id="size-value" class="range-value">80 px</span>
             </div>
             
             <div class="form-group">
                 <label for="logo-scale">Tamaño del logo (%):</label>
-                <input type="range" id="logo-scale" min="10" max="300" value="100">
+                <input type="range" id="logo-scale" min="10" max="400" value="100">
                 <span id="logo-scale-value" class="range-value">100%</span>
             </div>
 
             <div class="button-group">
-                <button class="orientation-btn" id="orientation-btn">↻</button>
+                <button class="orientation-btn" id="orientation-btn">↻ 90°</button>
                 <button class="mirror-btn" id="mirror-btn">MODO ESPEJO</button>
             </div>
 
