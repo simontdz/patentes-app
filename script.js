@@ -222,17 +222,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Estilos CSS para la impresión
         const styles = `
-            <style>
-                @page { margin: 0; size: auto; }
-                body { 
-                    margin: 0; 
-                    padding: 2mm; 
-                    display: flex; 
-                    justify-content: center; 
-                    align-items: center;
-                    min-height: 100vh;
-                    background-color: white !important;
-                }
+             <style>
+        /* ... (mantén el resto de estilos igual) ... */
+        #preview-brand {
+            font-size: 30mm !important;  // Aumentado de 25mm
+            margin: 1mm 0 !important;
+        }
+        #preview-number {
+            font-size: 40mm !important;  // Aumentado de 30mm
+            margin: 1mm 0 !important;
+        }
+        #preview-chassis {
+            font-size: 15mm !important;  // Aumentado de 12mm
+            margin: 1mm 0 !important;
+        }
+        /* ... */
+    </style>
                 .license-preview { 
                     background-color: white !important;
                     color: black !important;

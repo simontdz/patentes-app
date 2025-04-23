@@ -213,6 +213,7 @@ input[type="range"]::-webkit-slider-thumb {
     justify-content: center;
     align-items: center;
     transition: all 0.3s;
+    font-family: Arial, sans-serif;
 }
 
 .license-content {
@@ -243,6 +244,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     text-align: center;
     line-height: 1.1;
+    font-family: Arial, sans-serif;
 }
 
 #preview-number {
@@ -254,6 +256,7 @@ input[type="range"]::-webkit-slider-thumb {
     text-align: center;
     letter-spacing: 2px;
     line-height: 1.1;
+    font-family: Arial, sans-serif;
 }
 
 #preview-chassis {
@@ -265,6 +268,7 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
     word-break: break-word;
     line-height: 1.1;
+    font-family: Arial, sans-serif;
 }
 
 .hidden {
@@ -321,6 +325,7 @@ input[type="range"]::-webkit-slider-thumb {
     }
     .license-preview, .license-preview * {
         visibility: visible;
+        font-family: Arial, sans-serif !important;
     }
     .license-preview {
         position: absolute;
@@ -339,25 +344,27 @@ input[type="range"]::-webkit-slider-thumb {
         gap: 2mm !important;
         width: 100% !important;
         max-width: 100% !important;
+        padding: 5mm !important;
     }
     #preview-brand {
-        font-size: 25mm !important;
-        margin: 1mm 0 !important;
-    }
-    #preview-number {
         font-size: 30mm !important;
         margin: 1mm 0 !important;
     }
+    #preview-number {
+        font-size: 40mm !important;
+        margin: 1mm 0 !important;
+    }
     #preview-chassis {
-        font-size: 12mm !important;
+        font-size: 15mm !important;
         margin: 1mm 0 !important;
     }
     #preview-logo-container {
-        max-height: 25mm !important;
-        margin: 1mm 0 !important;
+        max-height: 30mm !important;
+        margin: 2mm 0 !important;
     }
     #preview-logo-container img {
-        max-height: 25mm !important;
+        max-height: 30mm !important;
+        max-width: 100% !important;
     }
     .mirror-mode {
         transform: scaleX(-1) !important;
