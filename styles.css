@@ -258,7 +258,10 @@ input[type="range"]::-webkit-slider-thumb {
     letter-spacing: 2px;
     line-height: 1;
     font-family: Arial, sans-serif;
-    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    max-width: 100%;
 }
 
 #preview-chassis {
@@ -344,9 +347,9 @@ input[type="range"]::-webkit-slider-thumb {
     }
     .license-content {
         gap: 1mm !important;
-        width: 90% !important;
-        max-width: 90% !important;
-        padding: 1mm !important;
+        width: 95% !important;
+        max-width: 95% !important;
+        padding: 0 !important;
         margin: 0 auto !important;
     }
     #preview-brand {
@@ -357,7 +360,10 @@ input[type="range"]::-webkit-slider-thumb {
         font-size: 45mm !important;
         margin: 0.5mm 0 !important;
         letter-spacing: 1mm !important;
-        word-break: break-all !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        transform-origin: center !important;
+        transform: scale(0.9) !important;
     }
     #preview-chassis {
         font-size: 18mm !important;
