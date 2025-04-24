@@ -72,6 +72,7 @@
             margin-top: 20px;
             position: relative;
             overflow: hidden;
+            width: 100%;
         }
         .preview-content {
             display: flex;
@@ -86,10 +87,10 @@
             transform: scaleX(-1);
         }
         .patente-item {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial Black', Arial, sans-serif;
             text-transform: uppercase;
             text-align: center;
-            line-height: 1.2;
+            line-height: 1;
             margin: 0;
             padding: 0;
             border: 1px dashed transparent;
@@ -97,9 +98,10 @@
             user-select: none;
             position: relative;
             display: none;
-            width: 100%;
+            width: auto;
             max-width: 100%;
-            overflow-wrap: break-word;
+            white-space: nowrap;
+            overflow: visible;
         }
         .patente-item.active {
             display: block;
@@ -108,9 +110,11 @@
             border-color: #aaa;
         }
         #patente-preview {
-            font-size: 32px;
+            font-size: 80px;
             max-width: 100%;
-            word-break: break-all;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            font-weight: bold;
         }
         .logo-container {
             width: 150px;
@@ -191,6 +195,9 @@
             .panel-right {
                 flex: 2;
             }
+            .preview {
+                min-height: 400px;
+            }
         }
         
         @media print {
@@ -202,6 +209,31 @@
             }
             .preview {
                 border: none;
+                padding: 0;
+                min-height: 0;
+                width: 100mm;
+            }
+            .preview-content {
+                gap: 5mm;
+            }
+            .patente-item {
+                white-space: nowrap;
+                line-height: 1;
+            }
+            #patente-preview {
+                font-size: 10mm !important;
+                letter-spacing: 1.5mm;
+                font-weight: bold;
+            }
+            #marca-preview {
+                font-size: 6mm !important;
+            }
+            #chasis-preview {
+                font-size: 5mm !important;
+            }
+            .logo-container {
+                width: 40mm !important;
+                height: 25mm !important;
             }
             @page {
                 size: auto;
@@ -265,8 +297,8 @@
                 
                 <div class="size-control">
                     <label for="patente-size">Tamaño de Patente:</label>
-                    <input type="range" id="patente-size" class="size-slider" min="24" max="100" value="32">
-                    <span id="patente-size-value">32px</span>
+                    <input type="range" id="patente-size" class="size-slider" min="24" max="150" value="80">
+                    <span id="patente-size-value">80px</span>
                 </div>
                 
                 <div class="size-control">
@@ -408,9 +440,10 @@
         });
         
         patenteSize.addEventListener('input', function() {
-            patentePreview.style.fontSize = Math.min(this.value, 100) + 'px';
-            patenteSizeValue.textContent = Math.min(this.value, 100) + 'px';
-            patentePreview.style.maxWidth = document.querySelector('.preview').offsetWidth + 'px';
+            const size = Math.min(this.value, 150);
+            patentePreview.style.fontSize = size + 'px';
+            patenteSizeValue.textContent = size + 'px';
+            patentePreview.style.whiteSpace = 'nowrap';
         });
         
         chasisSize.addEventListener('input', function() {
