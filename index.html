@@ -104,11 +104,11 @@
         .logo-container {
             width: 150px;
             height: 100px;
-            border: 1px solid #ddd;
             display: none; /* Oculto por defecto */
             align-items: center;
             justify-content: center;
             position: relative;
+            background-color: transparent;
         }
         .logo-container.active {
             display: flex; /* Se mostrará cuando tenga contenido */
@@ -116,6 +116,7 @@
         .logo-preview {
             max-width: 100%;
             max-height: 100%;
+            object-fit: contain;
         }
         .size-control {
             display: flex;
@@ -245,13 +246,13 @@
             <div class="panel-right">
                 <div class="controls">
                     <button id="btn-print">Imprimir</button>
-                    <button id="btn-download">Descargar PDF</button>
+                    <button id="btn-download">Descargar Imagen</button>
                 </div>
                 
                 <div class="preview">
                     <div class="preview-content" id="preview-content">
                         <div class="logo-container" id="logo-container">
-                            <img src="/api/placeholder/150/100" alt="Logo" class="logo-preview" id="logo-preview">
+                            <img src="" alt="Logo" class="logo-preview" id="logo-preview">
                         </div>
                         <div class="patente-item" id="marca-preview"></div>
                         <div class="patente-item" id="chasis-preview"></div>
@@ -293,7 +294,7 @@
             // Actualizar marca
             const marcaValue = marcaInput.value.trim().toUpperCase();
             if (marcaValue) {
-                marcaPreview.textContent = 'MARCA: ' + marcaValue;
+                marcaPreview.textContent = marcaValue;
                 marcaPreview.classList.add('active');
             } else {
                 marcaPreview.textContent = '';
@@ -303,7 +304,7 @@
             // Actualizar chasis
             const chasisValue = chasisInput.value.trim().toUpperCase();
             if (chasisValue) {
-                chasisPreview.textContent = 'CHASIS: ' + chasisValue;
+                chasisPreview.textContent = chasisValue;
                 chasisPreview.classList.add('active');
             } else {
                 chasisPreview.textContent = '';
@@ -313,7 +314,7 @@
             // Actualizar patente
             const patenteValue = patenteInput.value.trim().toUpperCase();
             if (patenteValue) {
-                patentePreview.textContent = 'PATENTE: ' + patenteValue;
+                patentePreview.textContent = patenteValue;
                 patentePreview.classList.add('active');
             } else {
                 patentePreview.textContent = '';
@@ -337,6 +338,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
+                logoPreview.src = '';
                 logoContainer.classList.remove('active');
             }
         });
@@ -378,10 +380,24 @@
             window.print();
         });
         
-        // Función para descargar como PDF
+        // Función para descargar como imagen
         downloadBtn.addEventListener('click', function() {
-            alert('Para guardar como PDF, utilice la función de impresión del navegador y seleccione "Guardar como PDF"');
-            window.print();
+            // Ocultar elementos no deseados en la captura
+            const preview = document.querySelector('.preview');
+            const originalBorder = preview.style.border;
+            preview.style.border = 'none';
+            
+            // Usar html2canvas para capturar el contenido
+            html2canvas(preview).then(canvas => {
+                // Restaurar el borde
+                preview.style.border = originalBorder;
+                
+                // Crear enlace de descarga
+                const link = document.createElement('a');
+                link.download = 'grabado-patente.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         });
 
         // Funcionalidad para mover elementos
@@ -463,5 +479,8 @@
         // Aplicar actualización inicial
         updatePreview();
     </script>
+    
+    <!-- Incluir html2canvas para la captura de pantalla -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
