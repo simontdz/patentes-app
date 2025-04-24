@@ -3,618 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplicación de Grabado de Patentes</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            font-weight: normal;
-            font-style: normal;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            touch-action: manipulation;
-        }
-        .container {
-            max-width: 100%;
-            margin: 0;
-            background-color: white;
-            padding: 10px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            font-size: 22px;
-            margin: 10px 0;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        button {
-            padding: 12px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            flex-grow: 1;
-            -webkit-appearance: none;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .preview {
-            border: 2px dashed #aaa;
-            padding: 10px;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            flex-grow: 1;
-            background-color: white;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-        }
-        .preview-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-            height: 100%;
-            gap: 15px;
-            min-height: 200px;
-        }
-        .mirror-mode .preview-content {
-            transform: scaleX(-1);
-        }
-        .patente-item {
-            font-family: 'Arial Black', Arial, sans-serif;
-            text-transform: uppercase;
-            text-align: center;
-            line-height: 1;
-            margin: 0;
-            padding: 0;
-            border: 1px dashed transparent;
-            cursor: move;
-            user-select: none;
-            position: absolute;
-            transform: translate(0, 0);
-            display: none;
-            width: auto;
-            max-width: 100%;
-            white-space: nowrap;
-            overflow: visible;
-            touch-action: none;
-        }
-        .patente-item.active {
-            display: block;
-        }
-        .patente-item:hover {
-            border-color: #aaa;
-        }
-        #patente-preview {
-            font-size: 80px;
-            max-width: 100%;
-            white-space: nowrap;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-        .logo-container {
-            width: 150px;
-            height: 100px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            background-color: transparent;
-            margin: 0 auto;
-            touch-action: none;
-            transform: translate(0, 0);
-        }
-        .logo-container.active {
-            display: flex;
-        }
-        .logo-preview {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        .size-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .size-slider {
-            width: 100%;
-            -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: #ddd;
-        }
-        .size-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #4CAF50;
-            cursor: pointer;
-        }
-        .panel {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            flex-grow: 1;
-        }
-        .panel-left {
-            width: 100%;
-        }
-        .panel-right {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .checkbox-group input {
-            width: auto;
-            transform: scale(1.2);
-        }
-        .checkbox-group label {
-            margin-bottom: 0;
-        }
-        .chasis-option {
-            display: none;
-            margin-top: 10px;
-        }
-        .chasis-option.active {
-            display: block;
-        }
-        .spacing-control {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-        
-        @media (min-width: 768px) {
-            .container {
-                padding: 15px;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            h1 {
-                font-size: 24px;
-            }
-            .panel {
-                flex-direction: row;
-            }
-            .panel-left {
-                flex: 1;
-                max-width: 400px;
-            }
-            .panel-right {
-                flex: 2;
-            }
-            .preview {
-                min-height: 400px;
-            }
-        }
-        
-        @media print {
-            .panel-left, .controls {
-                display: none;
-            }
-            .panel-right {
-                width: 100%;
-            }
-            .preview {
-                border: none;
-                padding: 0;
-                min-height: 0;
-                width: 100mm;
-                box-shadow: none;
-            }
-            .preview-content {
-                gap: 5mm;
-            }
-            .patente-item {
-                white-space: nowrap;
-                line-height: 1;
-            }
-            #patente-preview {
-                font-size: 10mm !important;
-                letter-spacing: 1.5mm;
-                font-weight: bold;
-            }
-            #marca-preview {
-                font-size: 6mm !important;
-            }
-            #chasis-preview {
-                font-size: 5mm !important;
-            }
-            .logo-container {
-                width: 40mm !important;
-                height: 25mm !important;
-            }
-            @page {
-                size: auto;
-                margin: 0mm;
-            }
-        }
-    </style>
+    <title>Generador de Patentes</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
-<body>
+<body class="light-mode">
+    <div class="header">
+        <div class="theme-toggle-container">
+            <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+        <h1>APP DE PATENTES<br><small>BIENVENIDO V7.0</small></h1>
+    </div>
+    
     <div class="container">
-        <h1>Aplicación de Grabado de Patentes</h1>
-        
-        <div class="panel">
-            <div class="panel-left">
-                <div class="form-group">
-                    <label for="marca">Marca de Auto:</label>
-                    <select id="marca">
-                        <option value="">Seleccione marca</option>
-                        <option value="TOYOTA">TOYOTA</option>
-                        <option value="FORD">FORD</option>
-                        <option value="CHEVROLET">CHEVROLET</option>
-                        <option value="VOLKSWAGEN">VOLKSWAGEN</option>
-                        <option value="HYUNDAI">HYUNDAI</option>
-                        <option value="NISSAN">NISSAN</option>
-                        <option value="KIA">KIA</option>
-                        <option value="RENAULT">RENAULT</option>
-                        <option value="PEUGEOT">PEUGEOT</option>
-                        <option value="FIAT">FIAT</option>
-                        <option value="OTRO">OTRA MARCA</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="patente">Número de Patente:</label>
-                    <input type="text" id="patente" placeholder="Ingrese número de patente">
-                </div>
-                
-                <div class="form-group">
-                    <button id="toggle-chasis">¿Necesita agregar chasis?</button>
-                    <div class="chasis-option" id="chasis-option">
-                        <label for="chasis">Número de Chasis:</label>
-                        <input type="text" id="chasis" placeholder="Ingrese número de chasis">
-                        <div class="size-control">
-                            <label for="chasis-size">Tamaño de Chasis:</label>
-                            <input type="range" id="chasis-size" class="size-slider" min="8" max="48" value="16">
-                            <span id="chasis-size-value">16px</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="logo">Logo:</label>
-                    <input type="file" id="logo" accept="image/*">
-                </div>
-                
-                <div class="size-control">
-                    <label for="marca-size">Tamaño de Marca:</label>
-                    <input type="range" id="marca-size" class="size-slider" min="12" max="48" value="24">
-                    <span id="marca-size-value">24px</span>
-                </div>
-                
-                <div class="size-control">
-                    <label for="patente-size">Tamaño de Patente:</label>
-                    <input type="range" id="patente-size" class="size-slider" min="24" max="150" value="80">
-                    <span id="patente-size-value">80px</span>
-                </div>
-                
-                <div class="size-control">
-                    <label for="logo-size">Tamaño de Logo:</label>
-                    <input type="range" id="logo-size" class="size-slider" min="50" max="300" value="150">
-                    <span id="logo-size-value">150px</span>
-                </div>
-                
-                <div class="spacing-control">
-                    <label for="element-spacing">Espaciado entre elementos:</label>
-                    <input type="range" id="element-spacing" class="size-slider" min="0" max="50" value="20">
-                    <span id="element-spacing-value">20px</span>
-                </div>
-                
-                <div class="checkbox-group">
-                    <input type="checkbox" id="mirror-mode">
-                    <label for="mirror-mode">Modo Espejo</label>
-                </div>
+        <div class="form-section">
+            <div class="form-group">
+                <label for="brand">Marca del vehículo (opcional):</label>
+                <select id="brand">
+                    <option value="">-- Sin marca --</option>
+                    <option value="TOYOTA">Toyota</option>
+                    <option value="VOLKSWAGEN">Volkswagen</option>
+                    <option value="SUZUKI">Suzuki</option>
+                    <option value="FORD">Ford</option>
+                    <option value="CHEVROLET">Chevrolet</option>
+                    <option value="NISSAN">Nissan</option>
+                    <option value="HYUNDAI">Hyundai</option>
+                    <option value="KIA">Kia</option>
+                    <option value="RENAULT">Renault</option>
+                    <option value="PEUGEOT">Peugeot</option>
+                    <option value="BMW">BMW</option>
+                    <option value="MERCEDES-BENZ">Mercedes-Benz</option>
+                    <option value="AUDI">Audi</option>
+                    <option value="MAZDA">Mazda</option>
+                    <option value="MITSUBISHI">Mitsubishi</option>
+                    <option value="HONDA">Honda</option>
+                    <option value="SUBARU">Subaru</option>
+                    <option value="DAIHATSU">Daihatsu</option>
+                    <option value="CHANGAN">Changan</option>
+                    <option value="OTRA">Otra marca</option>
+                </select>
             </div>
             
-            <div class="panel-right">
-                <div class="controls">
-                    <button id="btn-print">Imprimir</button>
-                    <button id="btn-download">Descargar Imagen</button>
-                </div>
-                
-                <div class="preview" id="preview-area">
-                    <div class="preview-content" id="preview-content">
-                        <div class="logo-container" id="logo-container">
-                            <img src="" alt="Logo" class="logo-preview" id="logo-preview">
-                        </div>
-                        <div class="patente-item" id="marca-preview"></div>
-                        <div class="patente-item" id="patente-preview"></div>
-                        <div class="patente-item" id="chasis-preview"></div>
+            <div class="form-group hidden" id="custom-brand-group">
+                <label for="custom-brand">Especificar marca:</label>
+                <input type="text" id="custom-brand" placeholder="Ingresa la marca del vehículo">
+            </div>
+            
+            <div class="form-group">
+                <label for="logo-upload">Logo de la marca (opcional):</label>
+                <input type="file" id="logo-upload" accept="image/*">
+            </div>
+            
+            <div class="form-group">
+                <label for="license-number">Número de patente:</label>
+                <input type="text" id="license-number" placeholder="Ej: ABR55 o XBRT56" maxlength="6">
+            </div>
+
+            <button class="toggle-btn" id="toggle-chassis">+ Agregar número de chasis</button>
+            
+            <div class="form-group hidden" id="chassis-group">
+                <label for="chassis-number">Número de chasis (opcional):</label>
+                <input type="text" id="chassis-number" placeholder="Ingresa el número de chasis">
+                <label for="chassis-size">Tamaño de fuente chasis:</label>
+                <input type="range" id="chassis-size" min="8" max="40" value="18">
+                <span id="chassis-size-value" class="range-value">18 px</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="spacing">Espaciado vertical (px):</label>
+                <input type="range" id="spacing" min="0" max="100" value="15">
+                <span id="spacing-value" class="range-value">15 px</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="size">Tamaño de fuente patente:</label>
+                <input type="range" id="size" min="20" max="100" value="48">
+                <span id="size-value" class="range-value">48 px</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="logo-scale">Tamaño del logo (%):</label>
+                <input type="range" id="logo-scale" min="10" max="300" value="100">
+                <span id="logo-scale-value" class="range-value">100%</span>
+            </div>
+
+            <div class="button-group">
+                <button class="mirror-btn" id="mirror-btn">MODO ESPEJO</button>
+            </div>
+
+            <button class="download-btn" id="print-btn">IMPRIMIR</button>
+            <button class="download-btn" id="download-btn">DESCARGAR PLANTILLA</button>
+        </div>
+        
+        <div class="preview-section">
+            <h2>Vista previa</h2>
+            <div class="license-container">
+                <div class="license-preview" id="license-preview">
+                    <div class="license-content" id="license-content">
+                        <div id="preview-logo-container"></div>
+                        <div id="preview-brand"></div>
+                        <div id="preview-number">AB123C</div>
+                        <div id="preview-chassis"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        // Referencias a elementos del DOM
-        const marcaInput = document.getElementById('marca');
-        const chasisInput = document.getElementById('chasis');
-        const patenteInput = document.getElementById('patente');
-        const logoInput = document.getElementById('logo');
-        const marcaPreview = document.getElementById('marca-preview');
-        const chasisPreview = document.getElementById('chasis-preview');
-        const patentePreview = document.getElementById('patente-preview');
-        const logoPreview = document.getElementById('logo-preview');
-        const logoContainer = document.getElementById('logo-container');
-        const previewContent = document.getElementById('preview-content');
-        const mirrorMode = document.getElementById('mirror-mode');
-        const printBtn = document.getElementById('btn-print');
-        const downloadBtn = document.getElementById('btn-download');
-        const toggleChasisBtn = document.getElementById('toggle-chasis');
-        const chasisOption = document.getElementById('chasis-option');
-        const previewArea = document.getElementById('preview-area');
-        
-        // Controles de tamaño
-        const marcaSize = document.getElementById('marca-size');
-        const chasisSize = document.getElementById('chasis-size');
-        const patenteSize = document.getElementById('patente-size');
-        const logoSize = document.getElementById('logo-size');
-        const elementSpacing = document.getElementById('element-spacing');
-        const marcaSizeValue = document.getElementById('marca-size-value');
-        const chasisSizeValue = document.getElementById('chasis-size-value');
-        const patenteSizeValue = document.getElementById('patente-size-value');
-        const logoSizeValue = document.getElementById('logo-size-value');
-        const elementSpacingValue = document.getElementById('element-spacing-value');
-
-        // Estado de visibilidad del chasis
-        let chasisVisible = false;
-
-        // Función para actualizar la vista previa
-        function updatePreview() {
-            // Actualizar marca
-            const marcaValue = marcaInput.value.trim().toUpperCase();
-            if (marcaValue) {
-                marcaPreview.textContent = marcaValue;
-                marcaPreview.classList.add('active');
-            } else {
-                marcaPreview.textContent = '';
-                marcaPreview.classList.remove('active');
-            }
-            
-            // Actualizar patente
-            const patenteValue = patenteInput.value.trim().toUpperCase();
-            if (patenteValue) {
-                patentePreview.textContent = patenteValue;
-                patentePreview.classList.add('active');
-            } else {
-                patentePreview.textContent = '';
-                patentePreview.classList.remove('active');
-            }
-            
-            // Actualizar chasis
-            const chasisValue = chasisInput.value.trim().toUpperCase();
-            if (chasisValue && chasisVisible) {
-                chasisPreview.textContent = chasisValue;
-                chasisPreview.classList.add('active');
-            } else {
-                chasisPreview.textContent = '';
-                chasisPreview.classList.remove('active');
-            }
-        }
-
-        // Función para actualizar el espaciado
-        function updateSpacing() {
-            const spacing = elementSpacing.value;
-            previewContent.style.gap = spacing + 'px';
-            elementSpacingValue.textContent = spacing + 'px';
-        }
-
-        // Event listeners para inputs
-        marcaInput.addEventListener('input', updatePreview);
-        chasisInput.addEventListener('input', updatePreview);
-        patenteInput.addEventListener('input', updatePreview);
-        
-        // Event listener para logo
-        logoInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    logoPreview.src = event.target.result;
-                    logoContainer.classList.add('active');
-                    logoPreview.style.maxWidth = '100%';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                logoPreview.src = '';
-                logoContainer.classList.remove('active');
-            }
-        });
-        
-        // Event listeners para controles de tamaño
-        marcaSize.addEventListener('input', function() {
-            marcaPreview.style.fontSize = this.value + 'px';
-            marcaSizeValue.textContent = this.value + 'px';
-        });
-        
-        patenteSize.addEventListener('input', function() {
-            const size = Math.min(this.value, 150);
-            patentePreview.style.fontSize = size + 'px';
-            patenteSizeValue.textContent = size + 'px';
-            patentePreview.style.whiteSpace = 'nowrap';
-        });
-        
-        chasisSize.addEventListener('input', function() {
-            chasisPreview.style.fontSize = this.value + 'px';
-            chasisSizeValue.textContent = this.value + 'px';
-        });
-        
-        logoSize.addEventListener('input', function() {
-            const size = this.value;
-            logoContainer.style.width = size + 'px';
-            logoContainer.style.height = (size * 2/3) + 'px';
-            logoSizeValue.textContent = size + 'px';
-        });
-        
-        // Control de espaciado
-        elementSpacing.addEventListener('input', updateSpacing);
-        
-        // Modo espejo
-        mirrorMode.addEventListener('change', function() {
-            if (this.checked) {
-                document.querySelector('.preview').classList.add('mirror-mode');
-            } else {
-                document.querySelector('.preview').classList.remove('mirror-mode');
-            }
-        });
-        
-        // Función de impresión
-        printBtn.addEventListener('click', function() {
-            window.print();
-        });
-        
-        // Función para descargar como imagen
-        downloadBtn.addEventListener('click', function() {
-            const originalBorder = previewArea.style.border;
-            const originalPadding = previewArea.style.padding;
-            const originalBg = previewArea.style.backgroundColor;
-            
-            previewArea.style.border = 'none';
-            previewArea.style.padding = '0';
-            previewArea.style.backgroundColor = 'white';
-            
-            html2canvas(previewArea, {
-                scale: 2,
-                logging: false,
-                useCORS: true,
-                allowTaint: true
-            }).then(canvas => {
-                previewArea.style.border = originalBorder;
-                previewArea.style.padding = originalPadding;
-                previewArea.style.backgroundColor = originalBg;
-                
-                const link = document.createElement('a');
-                link.download = 'grabado-patente.png';
-                link.href = canvas.toDataURL('image/png', 1.0);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-        });
-
-        // Mostrar/ocultar chasis
-        toggleChasisBtn.addEventListener('click', function() {
-            chasisVisible = !chasisVisible;
-            this.textContent = chasisVisible ? 'Ocultar chasis' : '¿Necesita agregar chasis?';
-            chasisOption.classList.toggle('active', chasisVisible);
-            updatePreview();
-        });
-
-        // Inicialización
-        marcaPreview.style.fontSize = marcaSize.value + 'px';
-        patentePreview.style.fontSize = patenteSize.value + 'px';
-        chasisPreview.style.fontSize = chasisSize.value + 'px';
-        updateSpacing();
-        updatePreview();
-
-        // Funcionalidad para mover elementos
-        let dragItem = null;
-        let offsetX, offsetY;
-
-        document.querySelectorAll('.patente-item, .logo-container').forEach(item => {
-            item.addEventListener('touchstart', handleTouchStart, { passive: false });
-            item.addEventListener('mousedown', handleMouseStart);
-        });
-
-        function handleTouchStart(e) {
-            e.preventDefault();
-            dragItem = this;
-            const rect = this.getBoundingClientRect();
-            const touch = e.touches[0];
-            offsetX = touch.clientX - rect.left;
-            offsetY = touch.clientY - rect.top;
-        }
-
-        function handleMouseStart(e) {
-            dragItem = this;
-            const rect = this.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-        }
-
-        document.addEventListener('touchmove', handleTouchMove, { passive: false });
-        document.addEventListener('mousemove', handleMouseMove);
-
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (dragItem) {
-                const touch = e.touches[0];
-                moveElement(touch.clientX, touch.clientY);
-            }
-        }
-
-        function handleMouseMove(e) {
-            if (dragItem) {
-                moveElement(e.clientX, e.clientY);
-            }
-        }
-
-        function moveElement(clientX, clientY) {
-            const previewRect = previewArea.getBoundingClientRect();
-            let left = clientX - previewRect.left - offsetX;
-            let top = clientY - previewRect.top - offsetY;
-            
-            left = Math.max(0, Math.min(left, previewRect.width - dragItem.offsetWidth));
-            top = Math.max(0, Math.min(top, previewRect.height - dragItem.offsetHeight));
-            
-            dragItem.style.transform = `translate(${left}px, ${top}px)`;
-        }
-
-        document.addEventListener('touchend', handleEnd);
-        document.addEventListener('mouseup', handleEnd);
-
-        function handleEnd() {
-            dragItem = null;
-        }
-    </script>
     
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
