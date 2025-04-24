@@ -352,7 +352,8 @@ input[type="range"]::-webkit-slider-thumb {
     }
     
     #preview-brand {
-        font-size: 28px;
+        font-size: 42px; /* Valor inicial que coincida con el control */
+        transition: font-size 0.2s ease; /* Animación suave al cambiar tamaño */
     }
     
     #preview-number {

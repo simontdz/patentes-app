@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleChassisBtn = document.getElementById('toggle-chassis');
     const chassisSizeInput = document.getElementById('chassis-size');
     const chassisSizeValue = document.getElementById('chassis-size-value');
+    const brandSizeInput = document.getElementById('brand-size');
+    const brandSizeValue = document.getElementById('brand-size-value');
 
     let logoUrl = null;
     let isMirrored = false;
@@ -164,6 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+        // Agregar event listener para el nuevo control
+    brandSizeInput.addEventListener('input', function() {
+        brandSizeValue.textContent = this.value + ' px';
+        previewBrand.style.fontSize = this.value + 'px';
+    });
+
     // Descargar la patente como imagen
     downloadBtn.addEventListener('click', function() {
         // Crear clon para la captura
@@ -280,11 +288,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar vista previa
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.7) + 'px';
     previewNumber.style.fontSize = sizeInput.value + 'px';
     previewChassis.style.fontSize = chassisSizeInput.value + 'px';
 
     // Ajustes iniciales para los controles
+    brandSizeInput.value = 42;
+    brandSizeValue.textContent = '42 px';
     spacingInput.value = 15;
     spacingValue.textContent = '15 px';
 
