@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const licenseContent = document.getElementById('license-content');
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
-    const orientationBtn = document.getElementById('orientation-btn');
     const licensePreview = document.getElementById('license-preview');
     const logoScaleInput = document.getElementById('logo-scale');
     const logoScaleValue = document.getElementById('logo-scale-value');
@@ -31,42 +30,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let logoUrl = null;
     let isMirrored = false;
-    let isRotated = false;
 
     // Modo espejo
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
-        updateTransforms();
-    });
-
-    // Rotación 180°
-    orientationBtn.addEventListener('click', function() {
-        isRotated = !isRotated;
-        updateTransforms();
-    });
-
-    function updateTransforms() {
-        // Resetear todas las transformaciones
-        licensePreview.classList.remove('rotated-180', 'mirror-mode');
-        
-        // Aplicar transformaciones según el estado actual
-        if (isRotated && isMirrored) {
-            licensePreview.classList.add('rotated-180', 'mirror-mode');
-            orientationBtn.textContent = 'ROTAR 0°';
-            mirrorBtn.textContent = 'MODO NORMAL';
-        } else if (isRotated) {
-            licensePreview.classList.add('rotated-180');
-            orientationBtn.textContent = 'ROTAR 0°';
-            mirrorBtn.textContent = 'MODO ESPEJO';
-        } else if (isMirrored) {
+        if (isMirrored) {
             licensePreview.classList.add('mirror-mode');
-            orientationBtn.textContent = 'ROTAR 180°';
             mirrorBtn.textContent = 'MODO NORMAL';
         } else {
-            orientationBtn.textContent = 'ROTAR 180°';
+            licensePreview.classList.remove('mirror-mode');
             mirrorBtn.textContent = 'MODO ESPEJO';
         }
-    }
+    });
 
     // Modo oscuro/claro
     themeToggle.addEventListener('click', function() {
@@ -200,11 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(clone);
 
         // Aplicar transformaciones actuales al clon
-        if (isRotated && isMirrored) {
-            clone.classList.add('rotated-180', 'mirror-mode');
-        } else if (isRotated) {
-            clone.classList.add('rotated-180');
-        } else if (isMirrored) {
+        if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
@@ -237,11 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.style.padding = '20px';
         
         // Aplicar transformaciones actuales al clon
-        if (isRotated && isMirrored) {
-            clone.classList.add('rotated-180', 'mirror-mode');
-        } else if (isRotated) {
-            clone.classList.add('rotated-180');
-        } else if (isMirrored) {
+        if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
@@ -281,14 +248,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 #preview-logo-container img {
                     max-height: 30mm !important;
                 }
-                .rotated-180 {
-                    transform: rotate(180deg) !important;
-                }
                 .mirror-mode {
                     transform: scaleX(-1) !important;
-                }
-                .rotated-180.mirror-mode {
-                    transform: rotate(180deg) scaleX(-1) !important;
                 }
             </style>
         `;

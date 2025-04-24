@@ -10,8 +10,6 @@
     --range-bg: #ddd;
     --mirror-btn: #FF9800;
     --mirror-btn-hover: #F57C00;
-    --orientation-btn: #4CAF50;
-    --orientation-btn-hover: #388E3C;
     --toggle-btn: #2196F3;
 }
 
@@ -27,8 +25,6 @@
     --range-bg: #555;
     --mirror-btn: #FFA000;
     --mirror-btn-hover: #FF8F00;
-    --orientation-btn: #2E7D32;
-    --orientation-btn-hover: #1B5E20;
     --toggle-btn: #1565C0;
 }
 
@@ -183,19 +179,22 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 300px;
+    padding: 20px;
 }
 
 .license-preview {
-    padding: 20px;
+    padding: 30px;
     text-align: center;
     background-color: var(--license-bg);
     width: 100%;
-    max-width: 100%;
+    max-width: 600px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 0 auto;
 }
 
 .license-content {
@@ -212,7 +211,7 @@ input[type="range"]::-webkit-slider-thumb {
     justify-content: center;
     align-items: center;
     max-width: 100%;
-    max-height: 120px;
+    max-height: 150px;
     overflow: hidden;
 }
 
@@ -282,21 +281,6 @@ input[type="range"]::-webkit-slider-thumb {
     background-color: var(--mirror-btn-hover);
 }
 
-.orientation-btn {
-    width: 60px;
-    background-color: var(--orientation-btn);
-    padding: 12px;
-    font-size: 1.2em;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.orientation-btn:hover {
-    background-color: var(--orientation-btn-hover);
-}
-
 .toggle-btn {
     background: none;
     border: none;
@@ -310,19 +294,9 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
 }
 
-/* Rotación 180 grados */
-.rotated-180 {
-    transform: rotate(180deg);
-}
-
 /* Modo espejo */
 .mirror-mode {
     transform: scaleX(-1);
-}
-
-/* Combinación de rotación 180 y espejo */
-.rotated-180.mirror-mode {
-    transform: rotate(180deg) scaleX(-1);
 }
 
 /* Ajustes para impresión */
@@ -365,14 +339,8 @@ input[type="range"]::-webkit-slider-thumb {
     #preview-logo-container img {
         max-height: 30mm !important;
     }
-    .rotated-180 {
-        transform: rotate(180deg) !important;
-    }
     .mirror-mode {
         transform: scaleX(-1) !important;
-    }
-    .rotated-180.mirror-mode {
-        transform: rotate(180deg) scaleX(-1) !important;
     }
 }
 
@@ -402,7 +370,8 @@ input[type="range"]::-webkit-slider-thumb {
         flex-direction: column;
     }
     
-    .orientation-btn {
-        width: 100%;
+    .license-preview {
+        padding: 20px;
+        max-width: 100%;
     }
 }
