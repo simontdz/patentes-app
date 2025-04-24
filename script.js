@@ -277,23 +277,20 @@ document.addEventListener('DOMContentLoaded', function() {
         printWindow.document.close();
     });
 
-    // Inicializar vista previa
+    // Inicializar vista previa con tamaño de 100px
+    sizeInput.value = 100;
+    sizeValue.textContent = '100 px';
+    previewNumber.style.fontSize = '100px';
+    previewBrand.style.fontSize = '70px';
+    previewChassis.style.fontSize = '24px';
+    
+    // Inicializar otros valores
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.7) + 'px';
-    previewNumber.style.fontSize = sizeInput.value + 'px';
-    previewChassis.style.fontSize = chassisSizeInput.value + 'px';
-
-    // Ajustes iniciales para los controles
     spacingInput.value = 15;
     spacingValue.textContent = '15 px';
-
-    sizeInput.value = 48;
-    sizeValue.textContent = '48 px';
-
     logoScaleInput.value = 100;
     logoScaleValue.textContent = '100%';
-
-    chassisSizeInput.value = 18;
-    chassisSizeValue.textContent = '18 px';
+    chassisSizeInput.value = 24;
+    chassisSizeValue.textContent = '24 px';
 });

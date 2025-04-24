@@ -181,7 +181,7 @@ input[type="range"]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
+    min-height: 250px;
     padding: 10px;
     box-sizing: border-box;
     background-color: white;
@@ -232,7 +232,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 #preview-brand {
-    font-size: 32px;
+    font-size: 70px;
     font-weight: bold;
     color: #000;
     margin: 0;
@@ -241,23 +241,28 @@ input[type="range"]::-webkit-slider-thumb {
     word-break: break-word;
     padding: 0 10px;
     box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #preview-number {
-    font-size: 48px;
+    font-size: 100px;
     font-weight: bold;
     color: #000;
     margin: 0;
     width: 100%;
     text-align: center;
-    letter-spacing: 2px;
-    word-break: break-word;
+    letter-spacing: 3px;
+    word-break: keep-all;
     padding: 0 10px;
     box-sizing: border-box;
+    white-space: nowrap;
+    line-height: 1;
 }
 
 #preview-chassis {
-    font-size: 18px;
+    font-size: 24px;
     color: #000;
     margin: 5px 0 0;
     width: 100%;
@@ -266,6 +271,9 @@ input[type="range"]::-webkit-slider-thumb {
     word-break: break-word;
     padding: 0 10px;
     box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .hidden {
@@ -310,12 +318,10 @@ input[type="range"]::-webkit-slider-thumb {
     font-weight: bold;
 }
 
-/* Modo espejo */
 .mirror-mode {
     transform: scaleX(-1);
 }
 
-/* Ajustes para impresión */
 @media print {
     body * {
         visibility: hidden;
@@ -367,31 +373,31 @@ input[type="range"]::-webkit-slider-thumb {
     }
     
     .form-section, .preview-section {
-        padding: 10px;
+        padding: 10px 5px;
     }
     
     .license-container {
-        min-height: 180px;
+        min-height: 220px;
         padding: 5px;
+        width: 95vw;
+        margin: 10px auto;
     }
     
     .license-preview {
-        padding: 10px;
+        padding: 10px 5px;
     }
     
     #preview-brand {
-        font-size: 24px;
-        padding: 0 5px;
+        font-size: 32px !important;
     }
     
     #preview-number {
-        font-size: 32px;
-        padding: 0 5px;
+        font-size: 80px !important;
+        letter-spacing: 2px;
     }
     
     #preview-chassis {
-        font-size: 14px;
-        padding: 0 5px;
+        font-size: 18px !important;
     }
     
     .button-group {
