@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Generador de Patentes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Patentes - APP-PATENTES</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
@@ -12,7 +12,7 @@
         <div class="theme-toggle-container">
             <button id="theme-toggle" class="theme-toggle">🌙</button>
         </div>
-        <h1>APP DE PATENTES<br><small>BIENVENIDO V6.0</small></h1>
+        <h1>APP DE PATENTES<br><small>BIENVENIDO V2.0</small></h1>
     </div>
     
     <div class="container">
@@ -23,8 +23,8 @@
                     <option value="">-- Sin marca --</option>
                     <option value="TOYOTA">Toyota</option>
                     <option value="VOLKSWAGEN">Volkswagen</option>
-                    <option value="SUZUKI">Suzuki</option>
                     <option value="FORD">Ford</option>
+                    <option value="HONDA">Honda</option>
                     <option value="CHEVROLET">Chevrolet</option>
                     <option value="NISSAN">Nissan</option>
                     <option value="HYUNDAI">Hyundai</option>
@@ -32,14 +32,11 @@
                     <option value="RENAULT">Renault</option>
                     <option value="PEUGEOT">Peugeot</option>
                     <option value="BMW">BMW</option>
-                    <option value="MERCEDES-BENZ">Mercedes-Benz</option>
+                    <option value="MERCEDES">Mercedes-Benz</option>
                     <option value="AUDI">Audi</option>
                     <option value="MAZDA">Mazda</option>
                     <option value="MITSUBISHI">Mitsubishi</option>
-                    <option value="HONDA">Honda</option>
                     <option value="SUBARU">Subaru</option>
-                    <option value="DAIHATSU">Daihatsu</option>
-                    <option value="CHANGAN">Changan</option>
                     <option value="OTRA">Otra marca</option>
                 </select>
             </div>
@@ -65,39 +62,34 @@
                 <label for="chassis-number">Número de chasis (opcional):</label>
                 <input type="text" id="chassis-number" placeholder="Ingresa el número de chasis">
                 <label for="chassis-size">Tamaño de fuente chasis:</label>
-                <input type="range" id="chassis-size" min="12" max="36" value="24">
+                <input type="range" id="chassis-size" min="8" max="60" value="24">
                 <span id="chassis-size-value" class="range-value">24 px</span>
             </div>
             
             <div class="form-group">
                 <label for="spacing">Espaciado vertical (px):</label>
-                <input type="range" id="spacing" min="0" max="50" value="5">
-                <span id="spacing-value" class="range-value">5 px</span>
+                <input type="range" id="spacing" min="0" max="150" value="30">
+                <span id="spacing-value" class="range-value">30 px</span>
             </div>
             
             <div class="form-group">
                 <label for="size">Tamaño de fuente patente:</label>
-                <input type="range" id="size" min="40" max="120" value="80">
+                <input type="range" id="size" min="20" max="150" value="80">
                 <span id="size-value" class="range-value">80 px</span>
             </div>
             
             <div class="form-group">
-                <label for="brand-size">Tamaño de fuente marca:</label>
-                <input type="range" id="brand-size" min="20" max="80" value="48">
-                <span id="brand-size-value" class="range-value">48 px</span>
-            </div>
-            
-            <div class="form-group">
                 <label for="logo-scale">Tamaño del logo (%):</label>
-                <input type="range" id="logo-scale" min="50" max="200" value="100">
+                <input type="range" id="logo-scale" min="10" max="400" value="100">
                 <span id="logo-scale-value" class="range-value">100%</span>
             </div>
 
             <div class="button-group">
+                <button class="orientation-btn" id="orientation-btn">↻ 90°</button>
                 <button class="mirror-btn" id="mirror-btn">MODO ESPEJO</button>
             </div>
 
-            <button class="print-btn" id="print-btn">IMPRIMIR</button>
+            <button class="download-btn" id="print-btn">IMPRIMIR</button>
             <button class="download-btn" id="download-btn">DESCARGAR PLANTILLA</button>
         </div>
         
@@ -109,7 +101,6 @@
                         <div id="preview-logo-container"></div>
                         <div id="preview-brand"></div>
                         <div id="preview-number">AB123C</div>
-                        <div id="preview-chassis"></div>
                     </div>
                 </div>
             </div>
