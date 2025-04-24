@@ -30,6 +30,8 @@
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -175,26 +177,31 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     max-width: 100%;
     margin: 10px 0;
-    overflow: visible;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 300px;
-    padding: 20px;
+    min-height: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 5px;
 }
 
 .license-preview {
-    padding: 30px;
+    padding: 15px;
     text-align: center;
     background-color: var(--license-bg);
     width: 100%;
-    max-width: 600px;
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.3s;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .license-content {
@@ -204,6 +211,7 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 15px;
     width: 100%;
     max-width: 100%;
+    overflow: hidden;
 }
 
 #preview-logo-container {
@@ -211,7 +219,7 @@ input[type="range"]::-webkit-slider-thumb {
     justify-content: center;
     align-items: center;
     max-width: 100%;
-    max-height: 150px;
+    max-height: 120px;
     overflow: hidden;
 }
 
@@ -230,6 +238,9 @@ input[type="range"]::-webkit-slider-thumb {
     margin: 0;
     width: 100%;
     text-align: center;
+    word-break: break-word;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 #preview-number {
@@ -240,6 +251,9 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     text-align: center;
     letter-spacing: 2px;
+    word-break: break-word;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 #preview-chassis {
@@ -250,6 +264,8 @@ input[type="range"]::-webkit-slider-thumb {
     text-align: center;
     font-weight: bold;
     word-break: break-word;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .hidden {
@@ -351,27 +367,50 @@ input[type="range"]::-webkit-slider-thumb {
     }
     
     .form-section, .preview-section {
-        padding: 12px;
+        padding: 10px;
+    }
+    
+    .license-container {
+        min-height: 180px;
+        padding: 5px;
+    }
+    
+    .license-preview {
+        padding: 10px;
     }
     
     #preview-brand {
-        font-size: 28px;
+        font-size: 24px;
+        padding: 0 5px;
     }
     
     #preview-number {
-        font-size: 40px;
+        font-size: 32px;
+        padding: 0 5px;
     }
     
     #preview-chassis {
-        font-size: 16px;
+        font-size: 14px;
+        padding: 0 5px;
     }
     
     .button-group {
         flex-direction: column;
     }
     
-    .license-preview {
-        padding: 20px;
-        max-width: 100%;
+    input[type="text"], select, input[type="file"] {
+        padding: 8px;
+    }
+    
+    .download-btn {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+    }
+    
+    h2 {
+        font-size: 1.2em;
     }
 }
