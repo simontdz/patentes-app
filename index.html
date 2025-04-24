@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aplicación de Grabado de Patentes</title>
     <style>
         * {
@@ -10,26 +10,28 @@
             font-family: Arial, sans-serif;
             font-weight: normal;
             font-style: normal;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             margin: 0;
-            padding: 10px;
+            padding: 0;
             background-color: #f5f5f5;
+            touch-action: manipulation;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
             background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         h1 {
             color: #333;
             text-align: center;
-            font-size: 24px;
-            margin-top: 10px;
-            margin-bottom: 15px;
+            font-size: 22px;
+            margin: 10px 0;
         }
         .form-group {
             margin-bottom: 15px;
@@ -38,41 +40,46 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            font-size: 14px;
         }
         input, select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             text-transform: uppercase;
+            font-size: 16px;
         }
         .controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
         button {
-            padding: 10px 15px;
+            padding: 12px 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             flex-grow: 1;
+            -webkit-appearance: none;
         }
         button:hover {
             background-color: #45a049;
         }
         .preview {
             border: 2px dashed #aaa;
-            padding: 20px;
-            min-height: 300px;
-            margin-top: 20px;
+            padding: 10px;
+            margin-top: 10px;
             position: relative;
             overflow: hidden;
             width: 100%;
+            flex-grow: 1;
+            background-color: white;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
         }
         .preview-content {
             display: flex;
@@ -81,7 +88,8 @@
             justify-content: center;
             transition: transform 0.3s ease;
             height: 100%;
-            gap: 20px;
+            gap: 15px;
+            min-height: 200px;
         }
         .mirror-mode .preview-content {
             transform: scaleX(-1);
@@ -137,31 +145,51 @@
         .size-control {
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 5px;
+            gap: 8px;
+            margin-top: 8px;
         }
         .size-slider {
             width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: #ddd;
+        }
+        .size-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
         }
         .panel {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
+            flex-grow: 1;
         }
         .panel-left {
             width: 100%;
         }
         .panel-right {
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             margin-top: 10px;
         }
         .checkbox-group input {
             width: auto;
+            transform: scale(1.2);
+        }
+        .checkbox-group label {
+            margin-bottom: 0;
         }
         .chasis-option {
             display: none;
@@ -177,20 +205,20 @@
         }
         
         @media (min-width: 768px) {
-            body {
-                padding: 20px;
-            }
             .container {
-                padding: 20px;
+                padding: 15px;
+                max-width: 1200px;
+                margin: 0 auto;
             }
             h1 {
-                font-size: 28px;
+                font-size: 24px;
             }
             .panel {
                 flex-direction: row;
             }
             .panel-left {
                 flex: 1;
+                max-width: 400px;
             }
             .panel-right {
                 flex: 2;
@@ -212,6 +240,7 @@
                 padding: 0;
                 min-height: 0;
                 width: 100mm;
+                box-shadow: none;
             }
             .preview-content {
                 gap: 5mm;
@@ -325,7 +354,7 @@
                     <button id="btn-download">Descargar Imagen</button>
                 </div>
                 
-                <div class="preview">
+                <div class="preview" id="preview-area">
                     <div class="preview-content" id="preview-content">
                         <div class="logo-container" id="logo-container">
                             <img src="" alt="Logo" class="logo-preview" id="logo-preview">
@@ -356,6 +385,7 @@
         const downloadBtn = document.getElementById('btn-download');
         const toggleChasisBtn = document.getElementById('toggle-chasis');
         const chasisOption = document.getElementById('chasis-option');
+        const previewArea = document.getElementById('preview-area');
         
         // Controles de tamaño
         const marcaSize = document.getElementById('marca-size');
@@ -475,18 +505,42 @@
             window.print();
         });
         
-        // Función para descargar como imagen
+        // Función para descargar como imagen (ajustada para iPhone XR)
         downloadBtn.addEventListener('click', function() {
-            const preview = document.querySelector('.preview');
-            const originalBorder = preview.style.border;
-            preview.style.border = 'none';
+            // Ocultar bordes y ajustar el área de captura
+            const originalBorder = previewArea.style.border;
+            const originalPadding = previewArea.style.padding;
+            const originalBg = previewArea.style.backgroundColor;
             
-            html2canvas(preview).then(canvas => {
-                preview.style.border = originalBorder;
+            previewArea.style.border = 'none';
+            previewArea.style.padding = '0';
+            previewArea.style.backgroundColor = 'white';
+            
+            // Configuración específica para html2canvas
+            const options = {
+                scale: 2, // Aumentar calidad
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: document.documentElement.offsetWidth,
+                windowHeight: document.documentElement.offsetHeight
+            };
+            
+            html2canvas(previewArea, options).then(canvas => {
+                // Restaurar estilos
+                previewArea.style.border = originalBorder;
+                previewArea.style.padding = originalPadding;
+                previewArea.style.backgroundColor = originalBg;
+                
+                // Crear enlace de descarga
                 const link = document.createElement('a');
                 link.download = 'grabado-patente.png';
-                link.href = canvas.toDataURL('image/png');
+                link.href = canvas.toDataURL('image/png', 1.0);
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
             });
         });
 
@@ -505,40 +559,71 @@
         updateSpacing();
         updatePreview();
 
-        // Funcionalidad para mover elementos
+        // Funcionalidad para mover elementos (optimizada para touch)
         let dragItem = null;
         let offsetX, offsetY;
 
         document.querySelectorAll('.patente-item, .logo-container').forEach(item => {
-            item.addEventListener('mousedown', function(e) {
-                dragItem = this;
-                const rect = this.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                this.style.cursor = 'grabbing';
-            });
+            item.addEventListener('touchstart', handleTouchStart, { passive: false });
+            item.addEventListener('mousedown', handleMouseStart);
         });
 
-        document.addEventListener('mousemove', function(e) {
+        function handleTouchStart(e) {
+            e.preventDefault();
+            dragItem = this;
+            const rect = this.getBoundingClientRect();
+            const touch = e.touches[0];
+            offsetX = touch.clientX - rect.left;
+            offsetY = touch.clientY - rect.top;
+            this.style.cursor = 'grabbing';
+        }
+
+        function handleMouseStart(e) {
+            dragItem = this;
+            const rect = this.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            this.style.cursor = 'grabbing';
+        }
+
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('mousemove', handleMouseMove);
+
+        function handleTouchMove(e) {
+            e.preventDefault();
             if (dragItem) {
-                const previewRect = document.querySelector('.preview').getBoundingClientRect();
-                let left = e.clientX - previewRect.left - offsetX;
-                let top = e.clientY - previewRect.top - offsetY;
-                
-                left = Math.max(0, Math.min(left, previewRect.width - dragItem.offsetWidth));
-                top = Math.max(0, Math.min(top, previewRect.height - dragItem.offsetHeight));
-                
-                dragItem.style.left = left + 'px';
-                dragItem.style.top = top + 'px';
+                const touch = e.touches[0];
+                moveElement(touch.clientX, touch.clientY);
             }
-        });
+        }
 
-        document.addEventListener('mouseup', function() {
+        function handleMouseMove(e) {
+            if (dragItem) {
+                moveElement(e.clientX, e.clientY);
+            }
+        }
+
+        function moveElement(clientX, clientY) {
+            const previewRect = previewArea.getBoundingClientRect();
+            let left = clientX - previewRect.left - offsetX;
+            let top = clientY - previewRect.top - offsetY;
+            
+            left = Math.max(0, Math.min(left, previewRect.width - dragItem.offsetWidth));
+            top = Math.max(0, Math.min(top, previewRect.height - dragItem.offsetHeight));
+            
+            dragItem.style.left = left + 'px';
+            dragItem.style.top = top + 'px';
+        }
+
+        document.addEventListener('touchend', handleEnd);
+        document.addEventListener('mouseup', handleEnd);
+
+        function handleEnd() {
             if (dragItem) {
                 dragItem.style.cursor = 'move';
                 dragItem = null;
             }
-        });
+        }
     </script>
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
