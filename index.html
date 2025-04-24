@@ -104,12 +104,14 @@
             border: 1px dashed transparent;
             cursor: move;
             user-select: none;
-            position: relative;
+            position: absolute;
+            transform: translate(0, 0);
             display: none;
             width: auto;
             max-width: 100%;
             white-space: nowrap;
             overflow: visible;
+            touch-action: none;
         }
         .patente-item.active {
             display: block;
@@ -130,9 +132,11 @@
             display: none;
             align-items: center;
             justify-content: center;
-            position: relative;
+            position: absolute;
             background-color: transparent;
             margin: 0 auto;
+            touch-action: none;
+            transform: translate(0, 0);
         }
         .logo-container.active {
             display: flex;
@@ -450,11 +454,12 @@
         // Event listener para logo
         logoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
+            if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     logoPreview.src = event.target.result;
                     logoContainer.classList.add('active');
+                    logoPreview.style.maxWidth = '100%';
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -505,9 +510,8 @@
             window.print();
         });
         
-        // Función para descargar como imagen (ajustada para iPhone XR)
+        // Función para descargar como imagen
         downloadBtn.addEventListener('click', function() {
-            // Ocultar bordes y ajustar el área de captura
             const originalBorder = previewArea.style.border;
             const originalPadding = previewArea.style.padding;
             const originalBg = previewArea.style.backgroundColor;
@@ -516,25 +520,16 @@
             previewArea.style.padding = '0';
             previewArea.style.backgroundColor = 'white';
             
-            // Configuración específica para html2canvas
-            const options = {
-                scale: 2, // Aumentar calidad
+            html2canvas(previewArea, {
+                scale: 2,
                 logging: false,
                 useCORS: true,
-                allowTaint: true,
-                scrollX: 0,
-                scrollY: 0,
-                windowWidth: document.documentElement.offsetWidth,
-                windowHeight: document.documentElement.offsetHeight
-            };
-            
-            html2canvas(previewArea, options).then(canvas => {
-                // Restaurar estilos
+                allowTaint: true
+            }).then(canvas => {
                 previewArea.style.border = originalBorder;
                 previewArea.style.padding = originalPadding;
                 previewArea.style.backgroundColor = originalBg;
                 
-                // Crear enlace de descarga
                 const link = document.createElement('a');
                 link.download = 'grabado-patente.png';
                 link.href = canvas.toDataURL('image/png', 1.0);
@@ -544,7 +539,7 @@
             });
         });
 
-        // Función para mostrar/ocultar chasis
+        // Mostrar/ocultar chasis
         toggleChasisBtn.addEventListener('click', function() {
             chasisVisible = !chasisVisible;
             this.textContent = chasisVisible ? 'Ocultar chasis' : '¿Necesita agregar chasis?';
@@ -559,7 +554,7 @@
         updateSpacing();
         updatePreview();
 
-        // Funcionalidad para mover elementos (optimizada para touch)
+        // Funcionalidad para mover elementos
         let dragItem = null;
         let offsetX, offsetY;
 
@@ -575,7 +570,6 @@
             const touch = e.touches[0];
             offsetX = touch.clientX - rect.left;
             offsetY = touch.clientY - rect.top;
-            this.style.cursor = 'grabbing';
         }
 
         function handleMouseStart(e) {
@@ -583,7 +577,6 @@
             const rect = this.getBoundingClientRect();
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
-            this.style.cursor = 'grabbing';
         }
 
         document.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -611,18 +604,14 @@
             left = Math.max(0, Math.min(left, previewRect.width - dragItem.offsetWidth));
             top = Math.max(0, Math.min(top, previewRect.height - dragItem.offsetHeight));
             
-            dragItem.style.left = left + 'px';
-            dragItem.style.top = top + 'px';
+            dragItem.style.transform = `translate(${left}px, ${top}px)`;
         }
 
         document.addEventListener('touchend', handleEnd);
         document.addEventListener('mouseup', handleEnd);
 
         function handleEnd() {
-            if (dragItem) {
-                dragItem.style.cursor = 'move';
-                dragItem = null;
-            }
+            dragItem = null;
         }
     </script>
     
