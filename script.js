@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewLogoContainer = document.getElementById('preview-logo-container');
     const previewBrand = document.getElementById('preview-brand');
     const previewNumber = document.getElementById('preview-number');
+    const previewChassis = document.getElementById('preview-chassis');
     const licenseContent = document.getElementById('license-content');
     const printBtn = document.getElementById('print-btn');
     const mirrorBtn = document.getElementById('mirror-btn');
@@ -30,44 +31,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let logoUrl = null;
     let isMirrored = false;
-    let rotationAngle = 0; // 0, 90, 180 grados
-
-    // Crear elemento para el número de chasis en la vista previa
-    const previewChassis = document.createElement('div');
-    previewChassis.id = 'preview-chassis';
-    licenseContent.appendChild(previewChassis);
+    let isRotated = false;
 
     // Modo espejo
     mirrorBtn.addEventListener('click', function() {
         isMirrored = !isMirrored;
-        if (isMirrored) {
-            licensePreview.classList.add('mirror-mode');
-            mirrorBtn.textContent = 'MODO NORMAL';
-        } else {
-            licensePreview.classList.remove('mirror-mode');
-            mirrorBtn.textContent = 'MODO ESPEJO';
-        }
+        updateTransforms();
     });
 
-    // Rotar vista previa (solo 90° y 180°)
+    // Rotación 180°
     orientationBtn.addEventListener('click', function() {
-        // Remover clases de rotación anteriores
-        licensePreview.classList.remove('rotated-90', 'rotated-180');
-        
-        // Calcular nuevo ángulo de rotación
-        rotationAngle = rotationAngle === 0 ? 90 : rotationAngle === 90 ? 180 : 0;
-        
-        // Aplicar rotación correspondiente
-        if (rotationAngle === 90) {
-            licensePreview.classList.add('rotated-90');
-            orientationBtn.textContent = '↻ 180°';
-        } else if (rotationAngle === 180) {
-            licensePreview.classList.add('rotated-180');
-            orientationBtn.textContent = '↻ 0°';
-        } else {
-            orientationBtn.textContent = '↻ 90°';
-        }
+        isRotated = !isRotated;
+        updateTransforms();
     });
+
+    function updateTransforms() {
+        // Resetear todas las transformaciones
+        licensePreview.classList.remove('rotated-180', 'mirror-mode');
+        
+        // Aplicar transformaciones según el estado actual
+        if (isRotated && isMirrored) {
+            licensePreview.classList.add('rotated-180', 'mirror-mode');
+            orientationBtn.textContent = 'ROTAR 0°';
+            mirrorBtn.textContent = 'MODO NORMAL';
+        } else if (isRotated) {
+            licensePreview.classList.add('rotated-180');
+            orientationBtn.textContent = 'ROTAR 0°';
+            mirrorBtn.textContent = 'MODO ESPEJO';
+        } else if (isMirrored) {
+            licensePreview.classList.add('mirror-mode');
+            orientationBtn.textContent = 'ROTAR 180°';
+            mirrorBtn.textContent = 'MODO NORMAL';
+        } else {
+            orientationBtn.textContent = 'ROTAR 180°';
+            mirrorBtn.textContent = 'MODO ESPEJO';
+        }
+    }
 
     // Modo oscuro/claro
     themeToggle.addEventListener('click', function() {
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Cargar logo con manejo de proporciones
+    // Cargar logo
     logoUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         previewLogoContainer.innerHTML = '';
@@ -123,17 +122,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const scale = parseInt(logoScaleInput.value) / 100;
                     applyLogoScale(img, scale);
                     previewLogoContainer.appendChild(img);
-                    updatePreview();
                 };
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Función para escalar el logo manteniendo proporciones
+    // Función para escalar el logo
     function applyLogoScale(img, scale) {
-        const maxWidth = 400 * scale;
-        const maxHeight = 200 * scale;
+        const maxWidth = 300 * scale;
+        const maxHeight = 120 * scale;
         
         const ratio = Math.min(
             maxWidth / img.naturalWidth,
@@ -142,8 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         img.style.width = (img.naturalWidth * ratio) + 'px';
         img.style.height = (img.naturalHeight * ratio) + 'px';
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100%';
     }
 
     // Actualizar valores de los ranges
@@ -154,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sizeInput.addEventListener('input', function() {
         sizeValue.textContent = this.value + ' px';
-        previewBrand.style.fontSize = (parseInt(this.value) * 0.6) + 'px';
+        previewBrand.style.fontSize = (parseInt(this.value) * 0.7) + 'px';
         previewNumber.style.fontSize = this.value + 'px';
     });
 
@@ -163,21 +159,18 @@ document.addEventListener('DOMContentLoaded', function() {
         previewChassis.style.fontSize = this.value + 'px';
     });
 
-    // Actualizar vista previa cuando cambia el número de patente
+    // Actualizar vista previa cuando cambian los valores
     licenseNumberInput.addEventListener('input', function() {
         previewNumber.textContent = this.value.toUpperCase();
     });
 
-    // Actualizar vista previa cuando cambia el número de chasis
     chassisNumberInput.addEventListener('input', function() {
         previewChassis.textContent = this.value.toUpperCase();
     });
 
-    // Actualizar vista previa cuando cambia la marca
     customBrandInput.addEventListener('input', updatePreview);
     brandSelect.addEventListener('change', updatePreview);
 
-    // Función para actualizar la marca en la vista previa
     function updatePreview() {
         const brand = brandSelect.value === 'OTRA' 
             ? customBrandInput.value.toUpperCase() 
@@ -203,21 +196,20 @@ document.addEventListener('DOMContentLoaded', function() {
         clone.style.position = 'fixed';
         clone.style.left = '-9999px';
         clone.style.backgroundColor = 'white';
-        clone.style.padding = '50px';
+        clone.style.padding = '20px';
         document.body.appendChild(clone);
 
         // Aplicar transformaciones actuales al clon
-        if (rotationAngle === 90) {
-            clone.classList.add('rotated-90');
-        } else if (rotationAngle === 180) {
+        if (isRotated && isMirrored) {
+            clone.classList.add('rotated-180', 'mirror-mode');
+        } else if (isRotated) {
             clone.classList.add('rotated-180');
-        }
-        if (isMirrored) {
+        } else if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
         html2canvas(clone, {
-            scale: 3,
+            scale: 2,
             backgroundColor: null,
             logging: false,
             useCORS: true,
@@ -235,22 +227,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Función de impresión mejorada
+    // Función de impresión
     printBtn.addEventListener('click', function() {
         const printWindow = window.open('', '_blank');
         
         // Clonar el elemento para imprimir
         const clone = licensePreview.cloneNode(true);
         clone.style.backgroundColor = 'white';
-        clone.style.padding = '50px';
+        clone.style.padding = '20px';
         
-        // Aplicar rotación actual al clon
-        if (rotationAngle === 90) {
-            clone.classList.add('rotated-90');
-        } else if (rotationAngle === 180) {
+        // Aplicar transformaciones actuales al clon
+        if (isRotated && isMirrored) {
+            clone.classList.add('rotated-180', 'mirror-mode');
+        } else if (isRotated) {
             clone.classList.add('rotated-180');
-        }
-        if (isMirrored) {
+        } else if (isMirrored) {
             clone.classList.add('mirror-mode');
         }
 
@@ -260,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 @page { margin: 0; size: auto; }
                 body { 
                     margin: 0; 
-                    padding: 20px; 
+                    padding: 10mm; 
                     display: flex; 
                     justify-content: center; 
                     align-items: center;
@@ -271,25 +262,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     background-color: white !important;
                     color: black !important;
                     box-shadow: none !important;
-                    padding: 50px !important;
+                    padding: 10mm !important;
+                    width: 100% !important;
+                    height: auto !important;
                 }
                 #preview-brand, #preview-number, #preview-chassis {
                     color: black !important;
                 }
                 #preview-brand {
-                    font-size: 72px !important;
+                    font-size: 15mm !important;
                 }
                 #preview-number {
-                    font-size: 100px !important;
+                    font-size: 20mm !important;
                 }
                 #preview-chassis {
-                    font-size: ${chassisSizeInput.value}px !important;
+                    font-size: 8mm !important;
                 }
                 #preview-logo-container img {
-                    max-height: 250px !important;
-                }
-                .rotated-90 {
-                    transform: rotate(90deg) !important;
+                    max-height: 30mm !important;
                 }
                 .rotated-180 {
                     transform: rotate(180deg) !important;
@@ -297,14 +287,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .mirror-mode {
                     transform: scaleX(-1) !important;
                 }
-                .mirror-mode * {
-                    transform: scaleX(-1) !important;
-                }
                 .rotated-180.mirror-mode {
                     transform: rotate(180deg) scaleX(-1) !important;
-                }
-                .rotated-180.mirror-mode * {
-                    transform: scaleX(-1) !important;
                 }
             </style>
         `;
@@ -335,24 +319,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar vista previa
     updatePreview();
     licenseContent.style.gap = spacingInput.value + 'px';
-    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.6) + 'px';
+    previewBrand.style.fontSize = (parseInt(sizeInput.value) * 0.7) + 'px';
     previewNumber.style.fontSize = sizeInput.value + 'px';
     previewChassis.style.fontSize = chassisSizeInput.value + 'px';
 
     // Ajustes iniciales para los controles
-    spacingInput.min = 0;
-    spacingInput.max = 150;
-    spacingInput.value = 30;
+    spacingInput.value = 15;
+    spacingValue.textContent = '15 px';
 
-    sizeInput.min = 20;
-    sizeInput.max = 150;
-    sizeInput.value = 80;
+    sizeInput.value = 48;
+    sizeValue.textContent = '48 px';
 
-    logoScaleInput.min = 10;
-    logoScaleInput.max = 400;
     logoScaleInput.value = 100;
+    logoScaleValue.textContent = '100%';
 
-    chassisSizeInput.min = 8;
-    chassisSizeInput.max = 60;
-    chassisSizeInput.value = 24;
+    chassisSizeInput.value = 18;
+    chassisSizeValue.textContent = '18 px';
 });
